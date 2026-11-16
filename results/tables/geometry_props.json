@@ -1,0 +1,79 @@
+{
+ "T1_monotonicity": {
+  "n_trials": 60,
+  "violations": 0,
+  "examples": []
+ },
+ "T2_rigid": {
+  "n_trials": 40,
+  "max_abs_dtau": 1.6076029396572267e-13
+ },
+ "T3_perturbation": [
+  {
+   "eps_A": 0.1,
+   "max_abs_dtau": 0.12611948488257507,
+   "ratio": 1.2611948488257507
+  },
+  {
+   "eps_A": 0.25,
+   "max_abs_dtau": 0.2783644429137051,
+   "ratio": 1.1134577716548204
+  },
+  {
+   "eps_A": 0.5,
+   "max_abs_dtau": 0.5127299260875615,
+   "ratio": 1.025459852175123
+  },
+  {
+   "eps_A": 1.0,
+   "max_abs_dtau": 1.2768279916768959,
+   "ratio": 1.2768279916768959
+  }
+ ],
+ "T4a_pairwise_identical_triple_differs": {
+  "A": {
+   "tau12": 1.3010000000000004,
+   "tau13": 0.800600127969284,
+   "tau23": 0.8006001279692845,
+   "tau123": 1.4257501599616054,
+   "n_options3": 1
+  },
+  "B": {
+   "tau12": 1.3010000000000004,
+   "tau13": 0.8008000719769661,
+   "tau23": 0.800800071976967,
+   "tau123": 3.5211110886477037,
+   "n_options3": 2
+  }
+ },
+ "T4b_eta3": {
+  "n": 300,
+  "frac_eta_pos": 0.67,
+  "eta_mean": 0.2296302610197109,
+  "eta_max": 2.0376114458642176,
+  "eta_q90": 0.6827618138772372
+ },
+ "T4c": {
+  "n": 200,
+  "corr_t3_vs_maxpair": 0.8683741385774643,
+  "resid_std_after_maxpair": 0.37968237690349654,
+  "t3_range": [
+   0.0,
+   3.0607953563422496
+  ]
+ },
+ "T5_direction": {
+  "max_abs_dtau_reversal": 0.0,
+  "enumeration": {
+   "backend_dir": "exact_numpy_csr:RuntimeError: C++ path engine build/load failed: Ninja is required to load C++ extensions",
+   "n_directed_paths": 12,
+   "n_undirected_paths": 68
+  }
+ },
+ "T6_filtration": {
+  "n_trials": 60,
+  "pairs_checked": 2700,
+  "discordant_fraction": 0.006666666666666667,
+  "shuffle_breaks_ordering_frac": 1.0
+ }
+}

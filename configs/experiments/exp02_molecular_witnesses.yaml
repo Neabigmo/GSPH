@@ -1,0 +1,5 @@
+experiment_id: exp02_molecular_witnesses
+title: Certified common witnesses in real molecules
+scripts: [experiments/exp02_molecular_witnesses/witness_dump.py, experiments/exp02_molecular_witnesses/render_witness.py]
+status: partial_v33   # 3 structures x 6 examples done; expand to quartile/median/relay selection
+outputs: [witness_examples.csv, witness_atoms.parquet, witness_contacts.parquet, witness_validation.csv]

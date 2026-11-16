@@ -1,0 +1,2 @@
+contrast,n,diff,ci_lo,ci_hi,p_perm,p_holm,note
+I_bound - I_unbound (same 47 targets),47,0.030470244186251088,0.004006065561028886,0.058535501637019156,0.0352,0.0352,RNA targets use different ids -> not pairable

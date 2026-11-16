@@ -1,0 +1,23 @@
+# Protein-DNA task (FTDMP Bound + Unbound docking decoys)
+task: protein_dna
+datasets:
+  bound:
+    benchmark: FTDMP Bound docking
+    n_targets: 47
+  unbound:
+    benchmark: FTDMP Unbound docking
+clash_filter: false   # intermolecular docking: clashes are signal, not artifacts
+scenario: protein_dna
+max_path_order: 3
+intermolecular:
+  interface_only: true
+models:
+  arms: [P, T, H, P+T, P+H, T+H, P+T+H]
+  cv: repeated_groupkfold
+  n_splits: 5
+  n_seeds: 20
+hard_pair:
+  label_gap_quantile: 0.75
+  physical_gap_rule: target_median_or_lower_half
+  n_seeds: 20
+  bootstrap: 2000

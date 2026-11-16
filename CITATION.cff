@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "CS-PPH: Common-Support Persistent Path Homology for Molecular Interaction Analysis"
+type: software
+authors:
+  - family-names: Neabigmo
+    given-names: ""
+repository-code: "https://github.com/Neabigmo/GSPH"
+license: MIT
+version: 0.1.0
+keywords:
+  - persistent homology
+  - molecular interactions
+  - protein-DNA docking
+  - RNA structure quality
+  - topological data analysis

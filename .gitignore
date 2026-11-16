@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Large / non-redistributable data
+results/raw/**
+results/processed/**
+!results/raw/README.md
+!results/processed/README.md
+data/
+external/
+*.pdb
+*.cif
+*.mmcif
+
+# Archives & snapshots
+*.zip
+*.tar.gz
+
+# Local config / secrets
+.env
+*.local.yaml
+secrets.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# HPC / run artifacts
+logs/
+*.log
+checkpoints/
+*.ckpt

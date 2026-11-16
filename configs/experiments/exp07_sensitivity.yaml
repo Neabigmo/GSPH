@@ -1,0 +1,10 @@
+experiment_id: exp07_sensitivity
+title: Structure and geometry modeling sensitivity
+depends_on: [exp03, exp05]
+status: planned
+axes:
+  clash_ratio: [0.0, 0.5, 0.55, 0.6, 0.65, 0.7]   # RNA intramolecular only
+  radius_scale: [0.90, 0.95, 1.0, 1.05, 1.10]
+  patch_representation: [union_of_lenses, single_microcontact, patch_centroid, enclosing_ball]
+  path_order_max: [1, 2, 3]
+outputs: [sensitivity_summary.csv, clash_sweep.parquet, radius_sweep.parquet, patch_repr_comparison.parquet]

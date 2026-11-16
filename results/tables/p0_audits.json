@@ -1,0 +1,77 @@
+{
+ "P0_2_bounded_lipschitz": [
+  {
+   "eps_A": 0.1,
+   "max_abs_dtau": 0.0685165231778555,
+   "bound": 0.1,
+   "violations": 0,
+   "n": 400.0,
+   "ratio": 0.685165231778555
+  },
+  {
+   "eps_A": 0.25,
+   "max_abs_dtau": 0.18519288811615242,
+   "bound": 0.25,
+   "violations": 0,
+   "n": 400.0,
+   "ratio": 0.7407715524646097
+  },
+  {
+   "eps_A": 0.5,
+   "max_abs_dtau": 0.36769197985536906,
+   "bound": 0.5,
+   "violations": 0,
+   "n": 400.0,
+   "ratio": 0.7353839597107381
+  },
+  {
+   "eps_A": 1.0,
+   "max_abs_dtau": 0.8135942444263777,
+   "bound": 1.0,
+   "violations": 0,
+   "n": 400.0,
+   "ratio": 0.8135942444263777
+  }
+ ],
+ "P0_3_solver_audit": {
+  "n_trials": 120,
+  "n_agree": 120,
+  "frac_agree": 1.0,
+  "max_abs_diff": 3.820255223274671e-11,
+  "mean_abs_diff": 6.914411173249609e-13,
+  "cert_fail": 0,
+  "incomplete": 0,
+  "routes": "{'branch_and_bound', 'closed_form_two_ball'}",
+  "examples": []
+ },
+ "P0_3_degenerate": {
+  "empty_path": {
+   "tau": 0.0,
+   "complete": true,
+   "cert": true,
+   "route": "empty"
+  },
+  "empty_patch": {
+   "tau": Infinity,
+   "complete": false,
+   "cert": false,
+   "route": "no_contacts"
+  },
+  "duplicate_patch": {
+   "tau1": 0.0,
+   "tau2": 0.0,
+   "equal": true
+  },
+  "coincident_atoms": {
+   "tau": 0.0,
+   "complete": true,
+   "cert": true,
+   "route": "closed_form_two_ball"
+  },
+  "zero_combinations": {
+   "tau": Infinity,
+   "complete": false,
+   "route": "bounded_zero"
+  }
+ }
+}

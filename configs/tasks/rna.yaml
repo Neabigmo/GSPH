@@ -1,0 +1,21 @@
+# RNA quality task (rsRNASP PM decoy set, clash06)
+task: rna_quality
+dataset: pm_decoy_set
+n_targets: 20
+n_structures: 826
+clash_filter: true
+sparse_event_filter:
+  fraction: 0.25
+  per_nt_quota: 8
+intra_min_bond_sep: 4
+scenario: rna_quality_sparse
+max_path_order: 3
+label:
+  name: rmsd_official
+  direction: lower_is_better
+  score_sign: -1
+models:
+  arms: [P, T, H, P+T, P+H, T+H, P+T+H]
+  cv: repeated_groupkfold
+  n_splits: 5
+  n_seeds: 20

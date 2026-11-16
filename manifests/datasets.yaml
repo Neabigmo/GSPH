@@ -1,0 +1,22 @@
+# Frozen dataset registry (V33 evidence base)
+datasets:
+  pm_decoy_set:
+    task: rna_quality
+    version: clash06
+    description: rsRNASP PM decoy set, 826 structures, 20 targets
+    clash_filter: "d < 0.6*(r_a+r_b) excluded (intramolecular only)"
+    n_structures: 826
+  protein_dna_bound:
+    task: protein_dna
+    benchmark: FTDMP Bound docking decoys
+    n_targets: 47
+  protein_dna_unbound:
+    task: protein_dna
+    benchmark: FTDMP Unbound docking decoys
+  membrane_m223:
+    task: membrane_stability
+    status: exploratory_paused
+    note: only 7 independent proteins; strict LOPO unsupported
+notes:
+  - All raw PDB/decoy data are NOT redistributed; see source_uri per manifest row.
+  - clash06 RNA results supersede pre-clash V31 RNA numbers.

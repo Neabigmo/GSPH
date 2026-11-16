@@ -1,0 +1,7 @@
+experiment_id: exp08_external_validation
+title: Published-path comparator and independent validation
+status: planned_blocked_on_data
+notes:
+  - faithful DPPT/APPT comparators only if exactly mappable; otherwise label as distance-based path control
+  - independent PD targets require >=10 non-overlapping targets else case study
+outputs: [published_comparator.csv, independent_target_metrics.csv]

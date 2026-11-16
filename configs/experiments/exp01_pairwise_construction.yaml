@@ -1,0 +1,6 @@
+experiment_id: exp01_pairwise_construction
+title: Pairwise-matched higher-order geometry
+script: experiments/exp01_pairwise_construction/geometry_props.py
+status: completed_v33
+seeds: "0-99 deterministic constructions"
+outputs: [geometry_cases.parquet, pairwise_support_matrix.parquet, higher_order_support.csv, witness_certificates.json]

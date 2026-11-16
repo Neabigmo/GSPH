@@ -1,0 +1,7 @@
+experiment_id: exp04_mathematical_audits
+title: Mathematical and numerical certification
+scripts: [experiments/exp04_mathematical_audits/p0_audits.py, experiments/exp04_mathematical_audits/p0_chain_audit.py]
+status: partial_v33   # perturbation 1600 done; multi-structure + 500 stress cases pending
+perturbation: {bounds: [0.05,0.1,0.25,0.5,1.0], reps: 100, structures: "4 PD + 4 RNA"}
+solver_stress: {n_cases: 500, seed_base: 0}
+outputs: [perturbation_results.parquet, solver_stress_cases.json, chain_map_audit.json, hodge_audit.json]

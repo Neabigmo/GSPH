@@ -1,0 +1,8 @@
+experiment_id: exp06_scoring_ablation
+title: Factorial scoring ablation and multi-seed evaluation
+scripts_dir: experiments/exp06_scoring_ablation
+status: partial_v33   # 10-seed hard-pair done; 20-seed x 5-fold grouped CV pending
+arms: [P, T, H, P+T, P+H, T+H, P+T+H]
+cv: {scheme: repeated_groupkfold, n_splits: 5, n_seeds: 20}
+hard_pair: {label_gap_quantile: 0.75, bootstrap: 2000}
+outputs: [cv_splits_seedXX.json, oof_predictions.parquet, metrics_by_target_seed.csv, hardpair_by_target_seed.csv, target_bootstrap_ci.csv]

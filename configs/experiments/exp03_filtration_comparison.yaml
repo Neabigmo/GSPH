@@ -1,0 +1,9 @@
+experiment_id: exp03_filtration_comparison
+title: Same-graph matched filtration comparison
+scripts: [experiments/exp03_filtration_comparison/filtration_compare.py, experiments/exp03_filtration_comparison/compare_one.py]
+status: completed_v33_16structures   # fine-grid + event-value + target bootstrap pending
+scales_primary: [0.0, 0.5, 2.0]
+scales_fine: [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
+birth_rules: [cs, pairwise, facetmax, edge, shuffled]
+bootstrap: {unit: target_cluster, n: 2000}
+outputs: [path_births.parquet, barcode_comparison.parquet, filtration_summary.csv, target_bootstrap.csv, chain_map_audit.json]

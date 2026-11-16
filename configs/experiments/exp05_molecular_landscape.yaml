@@ -1,0 +1,5 @@
+experiment_id: exp05_molecular_landscape
+title: Molecular path landscape and representation ablation
+scripts: [experiments/exp05_molecular_landscape/deep_subset.py, experiments/exp05_molecular_landscape/deep_dump.py, experiments/exp05_molecular_landscape/deep_complex_dump.py]
+status: partial_v33   # 16-structure dumps done; per-order/per-dim aggregation pending
+outputs: [molecular_path_landscape.parquet, barcode_summary_by_dim.csv, eta_summary_by_target.csv, structure_level_association.csv]

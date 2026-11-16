@@ -1,0 +1,2 @@
+task,target_id,structure_id,candidate_id,source_model,pose_type,bound_state,label,label_type,label_direction,split_group,structure_hash,source_uri,license
+# NOTE: populated per-task by tasks/*/prepare.py; schema frozen here. See docs/DATA_DICTIONARY.md.

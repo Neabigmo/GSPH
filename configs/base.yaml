@@ -1,0 +1,11 @@
+# Base CS-PPH configuration (V33-frozen defaults)
+experiment_id: base
+seed: 0
+scales: [0.0, 0.5, 2.0]          # discrete barcode scales (Angstrom)
+coefficient_field: 1000003        # GLMY rank field F_p
+hodge_dense_max_dimension: 384    # dense fallback limit (1024 used for retries)
+filtration_scales: [0.0, 0.5, 2.0]
+max_path_order: 3
+compute_eta: true
+use_cpp_path: true
+use_cpp_support: true
