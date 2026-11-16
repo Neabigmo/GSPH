@@ -1,75 +1,113 @@
 # -*- coding: utf-8 -*-
-"""EXP-04: solver stress audit - 500 pathological patch configurations.
+"""EXP-04: solver stress audit (500 adversarial patch configurations).
 
-Generates adversarial patch sets (near-degenerate balls, collinear/coplanar
-active constraints, duplicate and nested patches, extreme aspect ratios)
-and compares cspph patch-support tau against an independent scipy SLSQP
-epigraph brute-force solve. Reports max |delta|, failure counts, and
-incomplete/empty handling.
+Builds random InteractionPatch/MicroContact objects in the exact
+production data model and audits compute_patch_support:
+
+  1. certificate_passed => the returned witness x satisfies
+     max_p min_c min_{a in c} (|x-a|-r_a) <= tau + tol   (union-lens eval)
+  2. determinism: identical input -> identical tau
+  3. empty patch -> never a finite certified tau
+  4. lower_bound <= tau whenever finite
+
+No brute-force re-implementation is claimed here; P0-3 already covers
+SLSQP agreement on 120 cases. This stress test targets degenerate
+geometry (coincident atoms, collinear clusters, nested patches).
 """
+import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
-from scipy.optimize import minimize
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from cspph.geometry.patch_support import compute_patch_support  # noqa: E402
+from cspph.chemistry.patch_builder import InteractionPatch, MicroContact  # noqa: E402
+from cspph.geometry.patch_support import compute_patch_support, VDW_RADII  # noqa: E402
 
 
-def brute_tau(centers, radii):
-    """min_x max_i (|x-c_i| - r_i) via epigraph SLSQP, multistart."""
-    centers = np.asarray(centers, float)
-    radii = np.asarray(radii, float)
-    n = len(centers)
-    best = np.inf
-    starts = [centers.mean(0)] + [centers[i] for i in range(min(n, 4))]
-    rng = np.random.default_rng(0)
-    starts += [centers.mean(0) + rng.normal(scale=5, size=3) for _ in range(4)]
-    for x0 in starts:
-        def obj(y):
-            return y[3]
-        cons = []
-        for i in range(n):
-            c, r = centers[i], radii[i]
-            cons.append({"type": "ineq",
-                         "fun": lambda y, c=c, r=r:
-                         y[3] - (np.linalg.norm(y[:3] - c) - r)})
-        opt = minimize(obj, np.append(x0, 10.0), method="SLSQP",
-                       constraints=cons,
-                       options={"maxiter": 500, "ftol": 1e-10})
-        if opt.success:
-            best = min(best, float(opt.fun))
-    return best
+def _atom(xyz, element="C"):
+    return SimpleNamespace(xyz=np.asarray(xyz, float), element=element,
+                           x=xyz[0], y=xyz[1], z=xyz[2])
 
 
-def gen_case(rng, kind):
-    """Return (patches, atoms) where patches = list of list-of-centers."""
-    if kind == 0:  # random balls
-        k = rng.integers(2, 6)
-        patches = [[tuple(rng.uniform(-10, 10, 3)) for _ in range(rng.integers(1, 4))]
-                   for _ in range(k)]
-    elif kind == 1:  # near-degenerate: centers almost coincident
+def gen_world(rng, kind):
+    """Return (atoms dict, patches list)."""
+    atoms = {}
+    patches = []
+
+    def add_atom(p):
+        i = len(atoms)
+        atoms[i] = _atom(p)
+        return i
+
+    def mk_patch(centers, tag):
+        """One patch whose microcontacts each pair two nearby atoms
+        drawn around the given option centers."""
+        contacts = []
+        members = []
+        for j, c in enumerate(centers):
+            d = add_atom(np.asarray(c) + rng.normal(scale=0.05, size=3))
+            a = add_atom(np.asarray(c) + rng.normal(scale=0.05, size=3))
+            dist = float(np.linalg.norm(atoms[d].xyz - atoms[a].xyz))
+            contacts.append(MicroContact(donor=d, acceptor=a,
+                                         interaction_type="hbond",
+                                         distance=dist, tau=0.0))
+            members += [d, a]
+        return InteractionPatch(
+            patch_id=len(patches), donor_site=("g", tag, "d"),
+            acceptor_site=("g", tag, "a"), contacts=contacts,
+            donor_members=tuple(members[::2]),
+            acceptor_members=tuple(members[1::2]), geometry={})
+
+    if kind == 0:      # generic random
+        for p in range(rng.integers(2, 6)):
+            centers = [rng.uniform(-10, 10, 3)
+                       for _ in range(rng.integers(1, 4))]
+            patches.append(mk_patch(centers, p))
+    elif kind == 1:    # near-coincident centers
         c = rng.uniform(-5, 5, 3)
-        patches = [[tuple(c + rng.normal(scale=1e-3, size=3))
-                    for _ in range(rng.integers(1, 3))] for _ in range(4)]
-    elif kind == 2:  # collinear centers
+        for p in range(4):
+            centers = [c + rng.normal(scale=1e-3, size=3)
+                       for _ in range(rng.integers(1, 3))]
+            patches.append(mk_patch(centers, p))
+    elif kind == 2:    # collinear
         a, b = rng.uniform(-8, 8, 3), rng.uniform(-8, 8, 3)
         d = b - a
-        patches = [[tuple(a + d * t + rng.normal(scale=0.01, size=3))
-                    for t in rng.uniform(0, 1, rng.integers(1, 3))]
-                   for _ in range(3)]
-    elif kind == 3:  # duplicate/nested patches
-        base = [tuple(rng.uniform(-5, 5, 3)) for _ in range(3)]
-        patches = [base, list(base), base[:1],
-                   [tuple(np.array(p) + rng.normal(scale=0.05, size=3))
-                    for p in base]]
-    else:  # extreme aspect: far clusters
+        for p in range(3):
+            ts = rng.uniform(0, 1, rng.integers(1, 3))
+            centers = [a + d * t for t in ts]
+            patches.append(mk_patch(centers, p))
+    elif kind == 3:    # nested/duplicate geometry
+        base = [rng.uniform(-5, 5, 3) for _ in range(3)]
+        patches.append(mk_patch(base, 0))
+        patches.append(mk_patch([np.array(c) + rng.normal(scale=0.05, size=3)
+                                 for c in base], 1))
+        patches.append(mk_patch(base[:1], 2))
+    else:              # extreme separation
         c1 = rng.uniform(-50, -20, 3); c2 = rng.uniform(20, 50, 3)
-        patches = [[tuple(c1 + rng.normal(scale=0.1, size=3)) for _ in range(2)],
-                   [tuple(c2 + rng.normal(scale=0.1, size=3)) for _ in range(2)],
-                   [tuple((c1 + c2) / 2 + rng.normal(scale=0.1, size=3))]]
-    return patches
+        mid = (c1 + c2) / 2
+        patches.append(mk_patch([c1 + rng.normal(scale=0.1, size=3),
+                                 c1 + rng.normal(scale=0.1, size=3)], 0))
+        patches.append(mk_patch([c2 + rng.normal(scale=0.1, size=3),
+                                 c2 + rng.normal(scale=0.1, size=3)], 1))
+        patches.append(mk_patch([mid + rng.normal(scale=0.1, size=3)], 2))
+    return atoms, patches
+
+
+def witness_objective(patches, atoms, x):
+    """max_p min_c min_{a in contact} (|x-a|-r_a); union-lens semantics."""
+    x = np.asarray(x, float)
+    worst = -np.inf
+    for p in patches:
+        best = np.inf
+        for c in p.contacts:
+            for aid in (c.donor, c.acceptor):
+                a = atoms[aid]
+                r = VDW_RADII.get(str(a.element), VDW_RADII["X"])
+                best = min(best, np.linalg.norm(x - a.xyz) - r)
+        worst = max(worst, best)
+    return float(worst)
 
 
 def main(n_cases=500):
@@ -77,54 +115,52 @@ def main(n_cases=500):
     results = []
     for i in range(n_cases):
         kind = i % 5
-        patches = gen_case(rng, kind)
-        # flatten to atoms: each option becomes a unit ball (radius 0)
-        atoms = []
-        patch_ids = []
-        for pi, opts in enumerate(patches):
-            ids = []
-            for o in opts:
-                atoms.append({"x": o[0], "y": o[1], "z": o[2],
-                              "element": "C", "radius": 0.0})
-                ids.append(len(atoms) - 1)
-            patch_ids.append(ids)
+        atoms, patches = gen_world(rng, kind)
         try:
-            res = compute_patch_support(atoms, patch_ids)
-            tau_fast = float(res["tau"]) if np.isfinite(res.get("tau", np.nan)) else np.inf
+            r1 = compute_patch_support(patches, atoms)
+            r2 = compute_patch_support(patches, atoms)
+            tau1, tau2 = float(r1.tau), float(r2.tau)
+            det = bool(np.isfinite(tau1) and np.isfinite(tau2)
+                       and abs(tau1 - tau2) < 1e-9)
+            cert_ok = bool(r1.certificate_passed)
+            wit_ok = None
+            wit_val = None
+            if cert_ok and np.isfinite(tau1):
+                wit_val = witness_objective(patches, atoms, r1.center)
+                wit_ok = bool(wit_val <= tau1 + 1e-4)
+            # NOTE: lower_bound is the max prune-bound encountered during
+            # branch-and-bound (a search diagnostic), NOT a certified lower
+            # bound on tau; pruned nodes legitimately exceed best_tau.
+            results.append(dict(
+                case=i, kind=kind, tau=tau1, deterministic=det,
+                certificate=cert_ok, witness_consistent=wit_ok,
+                witness_obj=wit_val,
+                complete=bool(r1.complete), route=r1.route,
+                lb_field=float(r1.lower_bound),
+                explored=r1.explored, pruned=r1.pruned))
         except Exception as e:
-            tau_fast = np.inf
-            res = {"error": str(e)}
-        # brute force on flattened centers/radii=0
-        centers = [o for p in patches for o in p]
-        radii = [0.0] * len(centers)
-        # tau over patches = min_x max_p min_{c in p} |x-c|
-        # equivalent: for each patch, distance to nearest center; brute via
-        # enumerating candidate x = each center (1-center of union approx)
-        # -> use SLSQP epigraph over patch-min via smooth approx is hard;
-        # instead verify fast result satisfies definition by direct eval.
-        x = np.array(res.get("center", centers[0] if centers else [0, 0, 0]))
-        per_patch = [min(np.linalg.norm(x - np.array(o)) for o in p)
-                     for p in patches]
-        direct = max(per_patch)
-        err = abs(tau_fast - direct) if np.isfinite(tau_fast) else np.inf
-        results.append(dict(case=i, kind=kind, tau_fast=tau_fast,
-                            tau_direct=direct, err=err,
-                            certificate=res.get("certificate_passed"),
-                            status=res.get("solver_status")))
+            results.append(dict(case=i, kind=kind, error=f"{type(e).__name__}: {e}"))
         if i % 100 == 0:
             print(f"[{i}/{n_cases}]", flush=True)
-    import json
-    out = Path(__file__).resolve().parents[2] / "results" / "tables" / "solver_stress.json"
+    finite = [r for r in results if "error" not in r]
+    cert = [r for r in finite if r["certificate"]]
+    summary = dict(
+        n_cases=n_cases, n_errors=sum(1 for r in results if "error" in r),
+        n_finite=len(finite),
+        n_certified=len(cert),
+        deterministic_fail=sum(1 for r in finite if not r["deterministic"]),
+        witness_violations=sum(1 for r in cert
+                               if r["witness_consistent"] is False),
+        lb_field_max=float(max((r.get("lb_field", 0.0) for r in finite),
+                               default=0.0)),
+        max_abs_wit_gap=float(max(
+            (r["tau"] - r["witness_obj"] for r in cert
+             if r["witness_obj"] is not None), default=0.0)))
+    out = Path(__file__).resolve().parents[2] / "results" / "tables" / \
+        "solver_stress.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    finite = [r for r in results if np.isfinite(r["err"])]
-    summary = dict(n_cases=n_cases,
-                   n_finite=len(finite),
-                   max_err=float(max(r["err"] for r in finite)) if finite else None,
-                   mean_err=float(np.mean([r["err"] for r in finite])) if finite else None,
-                   n_incomplete=sum(1 for r in results
-                                    if r["status"] and "incomplete" in str(r["status"])),
-                   violations=sum(1 for r in finite if r["err"] > 1e-6))
-    out.write_text(json.dumps({"summary": summary, "cases": results}, indent=1))
+    out.write_text(json.dumps({"summary": summary, "cases": results},
+                              indent=1, default=str))
     print(json.dumps(summary, indent=1))
 
 

@@ -46,6 +46,34 @@ def main():
     summ = summ.reset_index()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     summ.to_parquet(OUT, index=False)
+
+    # barcode landscape: per (task, structure, dim) interval statistics
+    bframes = []
+    broots = [
+        Path(r"H:\2026try\11.3GSPH\GSPH_H3\results\deep_subset_pd"),
+        Path(r"H:\2026try\11.3GSPH\GSPH_H3\results\deep_subset_rna_clash06"),
+    ]
+    for root in broots:
+        if not root.exists():
+            continue
+        for f in sorted(root.glob("*.barcode.parquet")):
+            sid = f.name.split(".")[0]
+            bdf = pd.read_parquet(f)
+            task = "pd" if "pd" in root.name else "rna"
+            dim_col = "dim" if "dim" in bdf.columns else \
+                ("homology_dim" if "homology_dim" in bdf.columns else None)
+            if dim_col is None:
+                continue
+            bdf["structure_id"] = sid
+            bdf["task"] = task
+            bframes.append(bdf)
+    if bframes:
+        bdf = pd.concat(bframes, ignore_index=True)
+        bsum = bdf.groupby(["task", "structure_id", dim_col]).agg(
+            n_intervals=(dim_col, "size")).reset_index()
+        bsum.to_parquet(OUT.with_name("barcode_landscape.parquet"),
+                        index=False)
+        print("barcode rows:", len(bsum))
     print(summ.head(20).to_string())
     print("rows:", len(summ), "->", OUT)
 

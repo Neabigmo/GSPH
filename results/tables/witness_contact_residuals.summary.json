@@ -1,0 +1,206 @@
+{
+ "n_examples": 18,
+ "n_contact_rows": 81,
+ "tau_match_frac": 1.0,
+ "mean_active_patches": 3.8333333333333335,
+ "examples": [
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "48,36,49,34",
+   "order": 3,
+   "tau": 3.0176531675977576,
+   "gap": 0.3786536987215623,
+   "n_patches": 4,
+   "objective_recomputed": 3.0176531675977576,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "49,37,48,34",
+   "order": 3,
+   "tau": 3.0176531675977576,
+   "gap": 0.3786536987215623,
+   "n_patches": 4,
+   "objective_recomputed": 3.0176531675977576,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "51,36,49,32",
+   "order": 3,
+   "tau": 2.7825999836108313,
+   "gap": 0.34007091803261025,
+   "n_patches": 4,
+   "objective_recomputed": 2.7825999836108326,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "20,51,33",
+   "order": 2,
+   "tau": 2.7683210448593907,
+   "gap": 0.3363757511058547,
+   "n_patches": 3,
+   "objective_recomputed": 2.7683210448593933,
+   "tau_match": true,
+   "n_active_patches": 3
+  },
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "48,36,49,32",
+   "order": 3,
+   "tau": 2.7570266493521274,
+   "gap": 0.31449758377390635,
+   "n_patches": 4,
+   "objective_recomputed": 2.757026649352128,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+   "path": "49,37,48,32",
+   "order": 3,
+   "tau": 2.7570266493521274,
+   "gap": 0.31449758377390635,
+   "n_patches": 4,
+   "objective_recomputed": 2.757026649352128,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "67,68,66,71",
+   "order": 3,
+   "tau": 2.749101184489414,
+   "gap": 0.5751973647072122,
+   "n_patches": 4,
+   "objective_recomputed": 2.749101184489414,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "67,68,66,70",
+   "order": 3,
+   "tau": 2.7694623232407687,
+   "gap": 0.5726718123610044,
+   "n_patches": 4,
+   "objective_recomputed": 2.769462323240771,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "68,66,70,62",
+   "order": 3,
+   "tau": 2.6781420978677044,
+   "gap": 0.4813515869879401,
+   "n_patches": 4,
+   "objective_recomputed": 2.678142097867707,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "7,207,205,4",
+   "order": 3,
+   "tau": 2.204795046579713,
+   "gap": 0.3983128549226709,
+   "n_patches": 4,
+   "objective_recomputed": 2.204795046579715,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "46,93,43,97",
+   "order": 3,
+   "tau": 2.2566161697241363,
+   "gap": 0.3958187521554184,
+   "n_patches": 4,
+   "objective_recomputed": 2.2566161697241363,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "3dRNA-3IVN-3",
+   "path": "145,146,153,142",
+   "order": 3,
+   "tau": 2.341860371127887,
+   "gap": 0.39403017582534106,
+   "n_patches": 4,
+   "objective_recomputed": 2.341860371127887,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "95,28,31",
+   "order": 2,
+   "tau": 2.4408765891789064,
+   "gap": 0.44964707139447824,
+   "n_patches": 3,
+   "objective_recomputed": 2.440876589178907,
+   "tau_match": true,
+   "n_active_patches": 3
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "28,29,95,31",
+   "order": 3,
+   "tau": 2.4408765891789064,
+   "gap": 0.44964707139447824,
+   "n_patches": 4,
+   "objective_recomputed": 2.440876589178907,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "95,28,31,101",
+   "order": 3,
+   "tau": 2.444036080794874,
+   "gap": 0.3841119764232732,
+   "n_patches": 4,
+   "objective_recomputed": 2.4440360807948736,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "95,28,31,102",
+   "order": 3,
+   "tau": 2.444036080794874,
+   "gap": 0.3781661386793038,
+   "n_patches": 4,
+   "objective_recomputed": 2.4440360807948736,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "80,48,45,51",
+   "order": 3,
+   "tau": 2.3877102545158015,
+   "gap": 0.36627137389699804,
+   "n_patches": 4,
+   "objective_recomputed": 2.3877102545158015,
+   "tau_match": true,
+   "n_active_patches": 4
+  },
+  {
+   "structure_id": "SimRNA-3IVN-5",
+   "path": "111,182,179",
+   "order": 2,
+   "tau": 2.084649166290536,
+   "gap": 0.35281063288939674,
+   "n_patches": 3,
+   "objective_recomputed": 2.0846491662905375,
+   "tau_match": true,
+   "n_active_patches": 3
+  }
+ ]
+}
