@@ -99,7 +99,7 @@ def stratified_select(cands, path_eta, max_examples=8):
     items = sorted(cands.items(), key=lambda kv: kv[1][0])
     n = len(items)
     if n == 0:
-        return picks
+        return picks, seen, items, []
     # gap quartiles: median-gap candidate of each quartile
     for q in range(4):
         lo, hi = n * q // 4, max(n * (q + 1) // 4, n * q // 4 + 1)

@@ -45,10 +45,14 @@ def load_dump(dumpdir: Path, sid: str):
                 donor=int(d), acceptor=int(a),
                 distance=float(dist), tau=0.0,
                 interaction_type=str(itype)))
+        donor_members = json.loads(r["donor_members"])
+        acceptor_members = json.loads(r["acceptor_members"])
         patches[int(r["patch_id"])] = SimpleNamespace(
             patch_id=int(r["patch_id"]), contacts=contacts,
-            donor_members=json.loads(r["donor_members"]),
-            acceptor_members=json.loads(r["acceptor_members"]))
+            donor_members=donor_members,
+            acceptor_members=acceptor_members,
+            minimum_tau=0.0,
+            atom_ids=tuple(sorted(set(donor_members) | set(acceptor_members))))
     return atoms, patches
 
 
