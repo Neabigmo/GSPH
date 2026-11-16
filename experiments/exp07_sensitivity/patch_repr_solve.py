@@ -26,7 +26,11 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from cspph.geometry.patch_support import VDW_RADII  # noqa: E402
+try:
+    from cspph.geometry.patch_support import VDW_RADII
+except Exception:
+    sys.path.insert(0, "/work/home/acn8s56xc0/gsph_deep")
+    from runners.gsph1 import VDW_RADII  # noqa: E402
 
 
 def meb_radius(points, iters=200):
@@ -119,12 +123,19 @@ def main():
     for _, r in tau.iterrows():
         ids = tuple(int(x) for x in str(r["canon"]).split(","))
         union[ids] = float(r["tau"])
+    _cache = {}
+
+    def alt_cached(ids):
+        if ids not in _cache:
+            _cache[ids] = alt_births(ids, geom)
+        return _cache[ids]
+
     rows = []
     for _, r in paths.iterrows():
         ids = tuple(int(x) for x in str(r["canon"]).split(","))
         if ids not in union:
             continue
-        tc, tm, ts = alt_births(ids, geom)
+        tc, tm, ts = alt_cached(ids)
         rows.append(dict(
             structure_id=a.sid, graph=r["graph"], order=int(r["order"]),
             path=r["path"], canon=r["canon"],
