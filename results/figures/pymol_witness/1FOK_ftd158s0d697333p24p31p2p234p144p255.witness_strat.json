@@ -1,0 +1,1303 @@
+{
+ "structure_id": "1FOK_ftd158s0d697333p24p31p2p234p144p255",
+ "task": "pd",
+ "elapsed_s": 20.8,
+ "n_dir_paths": 403,
+ "n_candidates": 201,
+ "selection": "stratified",
+ "examples": [
+  {
+   "path": "49,32,46",
+   "canon": "32,46,49",
+   "order": 2,
+   "tau": 4.178712800660827,
+   "pairwise_max": 4.178712800660828,
+   "gap": -8.881784197001252e-16,
+   "witness": {
+    "center": [
+     16.345308886729892,
+     3.351088740047443,
+     20.693456878369908
+    ],
+    "tau": 4.178712800660827,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "o->o",
+    "n->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 32,
+     "donor_site": [
+      "A",
+      "478",
+      " >donor:sidechain_amide"
+     ],
+     "acceptor_site": [
+      "C",
+      "2",
+      " >acceptor:base_T_edge"
+     ],
+     "contacts": [
+      {
+       "donor": 3748,
+       "acceptor": 4988,
+       "distance": 4.847948747872445,
+       "tau": 0.8889743739362224,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 46,
+     "donor_site": [
+      "C",
+      "3",
+      " >donor:base_G_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "468",
+      " >acceptor:sidechain_phenol"
+     ],
+     "contacts": [
+      {
+       "donor": 5003,
+       "acceptor": 3678,
+       "distance": 3.263712004950104,
+       "tau": 0.1118560024750519,
+       "interaction_type": "O->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 49,
+     "donor_site": [
+      "C",
+      "3",
+      " >donor:base_G_wc"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5019,
+       "acceptor": 3747,
+       "distance": 4.132715144976211,
+       "tau": 0.5313575724881054,
+       "interaction_type": "N->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "3678": {
+     "xyz": [
+      15.892999649047852,
+      -1.5540000200271606,
+      17.827999114990234
+     ],
+     "element": "O",
+     "name": "OH",
+     "resname": "TYR",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3747": {
+     "xyz": [
+      13.461000442504883,
+      5.927000045776367,
+      22.95400047302246
+     ],
+     "element": "O",
+     "name": "OE1",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3748": {
+     "xyz": [
+      14.918999671936035,
+      4.659999847412109,
+      23.649999618530273
+     ],
+     "element": "N",
+     "name": "NE2",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "4988": {
+     "xyz": [
+      16.61400032043457,
+      0.5479999780654907,
+      21.72100067138672
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5003": {
+     "xyz": [
+      14.6899995803833,
+      0.6489999890327454,
+      19.913999557495117
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5019": {
+     "xyz": [
+      16.799999237060547,
+      8.281999588012695,
+      23.573999404907227
+     ],
+     "element": "N",
+     "name": "N2",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "gap_q1"
+  },
+  {
+   "path": "5,53,2,55",
+   "canon": "2,5,53,55",
+   "order": 3,
+   "tau": 2.435392396281399,
+   "pairwise_max": 2.435392396281399,
+   "gap": 0.0,
+   "witness": {
+    "center": [
+     22.606074632908136,
+     16.080436714986988,
+     -2.3025076341690074
+    ],
+    "tau": 2.435392396281399,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "n->o",
+    "o->o",
+    "o->o",
+    "o->o",
+    "o->o",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 2,
+     "donor_site": [
+      "A",
+      "77",
+      " >donor:backbone_N"
+     ],
+     "acceptor_site": [
+      "C",
+      "12",
+      " >acceptor:phosphate"
+     ],
+     "contacts": [
+      {
+       "donor": 625,
+       "acceptor": 5187,
+       "distance": 3.32612766135106,
+       "tau": 0.12806383067553007,
+       "interaction_type": "N->O"
+      },
+      {
+       "donor": 625,
+       "acceptor": 5188,
+       "distance": 3.5855603258332365,
+       "tau": 0.2577801629166181,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 5,
+     "donor_site": [
+      "A",
+      "77",
+      " >donor:sidechain_hydroxyl"
+     ],
+     "acceptor_site": [
+      "C",
+      "11",
+      " >acceptor:phosphate"
+     ],
+     "contacts": [
+      {
+       "donor": 630,
+       "acceptor": 5167,
+       "distance": 2.6226462312882726,
+       "tau": 0.0,
+       "interaction_type": "O->O"
+      },
+      {
+       "donor": 630,
+       "acceptor": 5168,
+       "distance": 4.242612835452549,
+       "tau": 0.6013064177262746,
+       "interaction_type": "O->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 53,
+     "donor_site": [
+      "C",
+      "10",
+      " >donor:base_G_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "77",
+      " >acceptor:sidechain_hydroxyl"
+     ],
+     "contacts": [
+      {
+       "donor": 5152,
+       "acceptor": 630,
+       "distance": 4.8310012757245655,
+       "tau": 0.8955006378622827,
+       "interaction_type": "O->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 55,
+     "donor_site": [
+      "C",
+      "11",
+      " >donor:base_T_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "77",
+      " >acceptor:sidechain_hydroxyl"
+     ],
+     "contacts": [
+      {
+       "donor": 5169,
+       "acceptor": 630,
+       "distance": 3.4527924395399947,
+       "tau": 0.20639621976999734,
+       "interaction_type": "O->O"
+      },
+      {
+       "donor": 5174,
+       "acceptor": 630,
+       "distance": 4.01074461279926,
+       "tau": 0.48537230639963,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "625": {
+     "xyz": [
+      21.659000396728516,
+      12.961000442504883,
+      -4.59499979019165
+     ],
+     "element": "N",
+     "name": "N",
+     "resname": "SER",
+     "chain": "A",
+     "resseq": -1
+    },
+    "630": {
+     "xyz": [
+      23.309999465942383,
+      14.6850004196167,
+      -3.381999969482422
+     ],
+     "element": "O",
+     "name": "OG",
+     "resname": "SER",
+     "chain": "A",
+     "resseq": -1
+    },
+    "5152": {
+     "xyz": [
+      25.452999114990234,
+      16.97100067138672,
+      0.29499998688697815
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5167": {
+     "xyz": [
+      25.132999420166016,
+      15.62399959564209,
+      -1.746999979019165
+     ],
+     "element": "O",
+     "name": "OP1",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5168": {
+     "xyz": [
+      25.298999786376953,
+      18.1299991607666,
+      -1.906999945640564
+     ],
+     "element": "O",
+     "name": "OP2",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5169": {
+     "xyz": [
+      23.23200035095215,
+      17.08300018310547,
+      -0.8989999890327454
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5174": {
+     "xyz": [
+      19.52199935913086,
+      15.307000160217285,
+      -2.2200000286102295
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5187": {
+     "xyz": [
+      18.509000778198242,
+      13.699000358581543,
+      -3.822999954223633
+     ],
+     "element": "O",
+     "name": "OP1",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5188": {
+     "xyz": [
+      19.516000747680664,
+      15.831000328063965,
+      -4.758999824523926
+     ],
+     "element": "O",
+     "name": "OP2",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "gap_q2"
+  },
+  {
+   "path": "49,38,51",
+   "canon": "38,49,51",
+   "order": 2,
+   "tau": 1.7995121117806718,
+   "pairwise_max": 1.7995011049624823,
+   "gap": 1.1006818189551737e-05,
+   "witness": {
+    "center": [
+     14.35937312959445,
+     7.206737054922349,
+     21.547577416413112
+    ],
+    "tau": 1.7995121117806718,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "n->o",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 38,
+     "donor_site": [
+      "A",
+      "478",
+      " >donor:sidechain_amide"
+     ],
+     "acceptor_site": [
+      "C",
+      "4",
+      " >acceptor:sugar"
+     ],
+     "contacts": [
+      {
+       "donor": 3748,
+       "acceptor": 5028,
+       "distance": 4.719708711113887,
+       "tau": 0.8248543555569434,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 49,
+     "donor_site": [
+      "C",
+      "3",
+      " >donor:base_G_wc"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5019,
+       "acceptor": 3747,
+       "distance": 4.132715144976211,
+       "tau": 0.5313575724881054,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 51,
+     "donor_site": [
+      "C",
+      "4",
+      " >donor:base_A_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5025,
+       "acceptor": 3747,
+       "distance": 3.7523024573839705,
+       "tau": 0.35615122869198523,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "3747": {
+     "xyz": [
+      13.461000442504883,
+      5.927000045776367,
+      22.95400047302246
+     ],
+     "element": "O",
+     "name": "OE1",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3748": {
+     "xyz": [
+      14.918999671936035,
+      4.659999847412109,
+      23.649999618530273
+     ],
+     "element": "N",
+     "name": "NE2",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "5019": {
+     "xyz": [
+      16.799999237060547,
+      8.281999588012695,
+      23.573999404907227
+     ],
+     "element": "N",
+     "name": "N2",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5025": {
+     "xyz": [
+      11.940999984741211,
+      6.156000137329102,
+      19.5310001373291
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DA",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5028": {
+     "xyz": [
+      13.01099967956543,
+      8.324999809265137,
+      21.368999481201172
+     ],
+     "element": "O",
+     "name": "O4'",
+     "resname": "DA",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "gap_q3"
+  },
+  {
+   "path": "51,37,47",
+   "canon": "37,47,51",
+   "order": 2,
+   "tau": 1.8911904522508212,
+   "pairwise_max": 1.7321124380594457,
+   "gap": 0.15907801419137546,
+   "witness": {
+    "center": [
+     12.348027293441337,
+     3.5252424057888314,
+     21.663994002636876
+    ],
+    "tau": 1.8911904522508212,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "o->o",
+    "o->o",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 37,
+     "donor_site": [
+      "A",
+      "478",
+      " >donor:sidechain_amide"
+     ],
+     "acceptor_site": [
+      "C",
+      "3",
+      " >acceptor:sugar"
+     ],
+     "contacts": [
+      {
+       "donor": 3748,
+       "acceptor": 5006,
+       "distance": 2.9670452661625912,
+       "tau": 0.0,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 47,
+     "donor_site": [
+      "C",
+      "3",
+      " >donor:base_G_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "472",
+      " >acceptor:sidechain_phenol"
+     ],
+     "contacts": [
+      {
+       "donor": 5008,
+       "acceptor": 3704,
+       "distance": 4.133214238536788,
+       "tau": 0.5466071192683941,
+       "interaction_type": "O->O"
+      },
+      {
+       "donor": 5003,
+       "acceptor": 3704,
+       "distance": 4.406521589711843,
+       "tau": 0.6832607948559213,
+       "interaction_type": "O->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 51,
+     "donor_site": [
+      "C",
+      "4",
+      " >donor:base_A_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5025,
+       "acceptor": 3747,
+       "distance": 3.7523024573839705,
+       "tau": 0.35615122869198523,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "3704": {
+     "xyz": [
+      10.805999755859375,
+      0.5,
+      21.989999771118164
+     ],
+     "element": "O",
+     "name": "OH",
+     "resname": "TYR",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3747": {
+     "xyz": [
+      13.461000442504883,
+      5.927000045776367,
+      22.95400047302246
+     ],
+     "element": "O",
+     "name": "OE1",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3748": {
+     "xyz": [
+      14.918999671936035,
+      4.659999847412109,
+      23.649999618530273
+     ],
+     "element": "N",
+     "name": "NE2",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "5003": {
+     "xyz": [
+      14.6899995803833,
+      0.6489999890327454,
+      19.913999557495117
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5006": {
+     "xyz": [
+      14.404999732971191,
+      2.86899995803833,
+      21.340999603271484
+     ],
+     "element": "O",
+     "name": "O4'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5008": {
+     "xyz": [
+      11.70199966430664,
+      3.8289999961853027,
+      19.709999084472656
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5025": {
+     "xyz": [
+      11.940999984741211,
+      6.156000137329102,
+      19.5310001373291
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DA",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "gap_q4"
+  },
+  {
+   "path": "7,53,2",
+   "canon": "2,7,53",
+   "order": 2,
+   "tau": 2.573996906218081,
+   "pairwise_max": 2.435392396281399,
+   "gap": 0.13860450993668216,
+   "witness": {
+    "center": [
+     23.09418733463317,
+     15.647238923809828,
+     -2.7781860616014837
+    ],
+    "tau": 2.573996906218081,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "n->o",
+    "n->o",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 2,
+     "donor_site": [
+      "A",
+      "77",
+      " >donor:backbone_N"
+     ],
+     "acceptor_site": [
+      "C",
+      "12",
+      " >acceptor:phosphate"
+     ],
+     "contacts": [
+      {
+       "donor": 625,
+       "acceptor": 5187,
+       "distance": 3.32612766135106,
+       "tau": 0.12806383067553007,
+       "interaction_type": "N->O"
+      },
+      {
+       "donor": 625,
+       "acceptor": 5188,
+       "distance": 3.5855603258332365,
+       "tau": 0.2577801629166181,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 7,
+     "donor_site": [
+      "A",
+      "78",
+      " >donor:backbone_N"
+     ],
+     "acceptor_site": [
+      "C",
+      "11",
+      " >acceptor:phosphate"
+     ],
+     "contacts": [
+      {
+       "donor": 631,
+       "acceptor": 5167,
+       "distance": 4.778871678448566,
+       "tau": 0.8544358392242832,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 53,
+     "donor_site": [
+      "C",
+      "10",
+      " >donor:base_G_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "77",
+      " >acceptor:sidechain_hydroxyl"
+     ],
+     "contacts": [
+      {
+       "donor": 5152,
+       "acceptor": 630,
+       "distance": 4.8310012757245655,
+       "tau": 0.8955006378622827,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "625": {
+     "xyz": [
+      21.659000396728516,
+      12.961000442504883,
+      -4.59499979019165
+     ],
+     "element": "N",
+     "name": "N",
+     "resname": "SER",
+     "chain": "A",
+     "resseq": -1
+    },
+    "630": {
+     "xyz": [
+      23.309999465942383,
+      14.6850004196167,
+      -3.381999969482422
+     ],
+     "element": "O",
+     "name": "OG",
+     "resname": "SER",
+     "chain": "A",
+     "resseq": -1
+    },
+    "631": {
+     "xyz": [
+      24.29599952697754,
+      12.805000305175781,
+      -5.513999938964844
+     ],
+     "element": "N",
+     "name": "N",
+     "resname": "GLU",
+     "chain": "A",
+     "resseq": -1
+    },
+    "5152": {
+     "xyz": [
+      25.452999114990234,
+      16.97100067138672,
+      0.29499998688697815
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5167": {
+     "xyz": [
+      25.132999420166016,
+      15.62399959564209,
+      -1.746999979019165
+     ],
+     "element": "O",
+     "name": "OP1",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5187": {
+     "xyz": [
+      18.509000778198242,
+      13.699000358581543,
+      -3.822999954223633
+     ],
+     "element": "O",
+     "name": "OP1",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5188": {
+     "xyz": [
+      19.516000747680664,
+      15.831000328063965,
+      -4.758999824523926
+     ],
+     "element": "O",
+     "name": "OP2",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "tau_med"
+  },
+  {
+   "path": "20,51,33",
+   "canon": "20,33,51",
+   "order": 2,
+   "tau": 2.768321044859391,
+   "pairwise_max": 2.431945293753536,
+   "gap": 0.33637575110585516,
+   "witness": {
+    "center": [
+     13.766119382787746,
+     3.5720036528701016,
+     22.426099226300277
+    ],
+    "tau": 2.768321044859391,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "o->o",
+    "o->o",
+    "n->o",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 20,
+     "donor_site": [
+      "A",
+      "472",
+      " >donor:sidechain_phenol"
+     ],
+     "acceptor_site": [
+      "C",
+      "3",
+      " >acceptor:base_G_edge"
+     ],
+     "contacts": [
+      {
+       "donor": 3704,
+       "acceptor": 5008,
+       "distance": 4.133214238536788,
+       "tau": 0.5466071192683941,
+       "interaction_type": "O->O"
+      },
+      {
+       "donor": 3704,
+       "acceptor": 5003,
+       "distance": 4.406521589711843,
+       "tau": 0.6832607948559213,
+       "interaction_type": "O->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 33,
+     "donor_site": [
+      "A",
+      "478",
+      " >donor:sidechain_amide"
+     ],
+     "acceptor_site": [
+      "C",
+      "2",
+      " >acceptor:base_T_wc"
+     ],
+     "contacts": [
+      {
+       "donor": 3748,
+       "acceptor": 4993,
+       "distance": 2.7249107252679856,
+       "tau": 0.0,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 51,
+     "donor_site": [
+      "C",
+      "4",
+      " >donor:base_A_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5025,
+       "acceptor": 3747,
+       "distance": 3.7523024573839705,
+       "tau": 0.35615122869198523,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "3704": {
+     "xyz": [
+      10.805999755859375,
+      0.5,
+      21.989999771118164
+     ],
+     "element": "O",
+     "name": "OH",
+     "resname": "TYR",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3747": {
+     "xyz": [
+      13.461000442504883,
+      5.927000045776367,
+      22.95400047302246
+     ],
+     "element": "O",
+     "name": "OE1",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3748": {
+     "xyz": [
+      14.918999671936035,
+      4.659999847412109,
+      23.649999618530273
+     ],
+     "element": "N",
+     "name": "NE2",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "4993": {
+     "xyz": [
+      17.290000915527344,
+      4.017000198364258,
+      24.82900047302246
+     ],
+     "element": "O",
+     "name": "O2",
+     "resname": "DT",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5003": {
+     "xyz": [
+      14.6899995803833,
+      0.6489999890327454,
+      19.913999557495117
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5008": {
+     "xyz": [
+      11.70199966430664,
+      3.8289999961853027,
+      19.709999084472656
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5025": {
+     "xyz": [
+      11.940999984741211,
+      6.156000137329102,
+      19.5310001373291
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DA",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "eta3_max"
+  },
+  {
+   "path": "15,51,35",
+   "canon": "15,35,51",
+   "order": 2,
+   "tau": 3.29956868505481,
+   "pairwise_max": 3.29956868505481,
+   "gap": 0.0,
+   "witness": {
+    "center": [
+     13.874115705687762,
+     3.1356679952505275,
+     19.166368686726546
+    ],
+    "tau": 3.29956868505481,
+    "certificate_passed": true,
+    "route": "branch_and_bound"
+   },
+   "contact_types": [
+    "n->o",
+    "n->n",
+    "o->o"
+   ],
+   "patches": [
+    {
+     "patch_id": 15,
+     "donor_site": [
+      "A",
+      "466",
+      " >donor:sidechain_amine"
+     ],
+     "acceptor_site": [
+      "C",
+      "3",
+      " >acceptor:base_G_edge"
+     ],
+     "contacts": [
+      {
+       "donor": 3661,
+       "acceptor": 5008,
+       "distance": 4.356046366142766,
+       "tau": 0.6430231830713831,
+       "interaction_type": "N->O"
+      }
+     ]
+    },
+    {
+     "patch_id": 35,
+     "donor_site": [
+      "A",
+      "478",
+      " >donor:sidechain_amide"
+     ],
+     "acceptor_site": [
+      "C",
+      "3",
+      " >acceptor:base_G_hoogsteen"
+     ],
+     "contacts": [
+      {
+       "donor": 3748,
+       "acceptor": 5013,
+       "distance": 4.445636077781737,
+       "tau": 0.6728180388908686,
+       "interaction_type": "N->N"
+      }
+     ]
+    },
+    {
+     "patch_id": 51,
+     "donor_site": [
+      "C",
+      "4",
+      " >donor:base_A_edge"
+     ],
+     "acceptor_site": [
+      "A",
+      "478",
+      " >acceptor:sidechain_amide"
+     ],
+     "contacts": [
+      {
+       "donor": 5025,
+       "acceptor": 3747,
+       "distance": 3.7523024573839705,
+       "tau": 0.35615122869198523,
+       "interaction_type": "O->O"
+      }
+     ]
+    }
+   ],
+   "atoms": {
+    "3661": {
+     "xyz": [
+      10.404999732971191,
+      2.013000011444092,
+      15.968999862670898
+     ],
+     "element": "N",
+     "name": "NZ",
+     "resname": "LYS",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3747": {
+     "xyz": [
+      13.461000442504883,
+      5.927000045776367,
+      22.95400047302246
+     ],
+     "element": "O",
+     "name": "OE1",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "3748": {
+     "xyz": [
+      14.918999671936035,
+      4.659999847412109,
+      23.649999618530273
+     ],
+     "element": "N",
+     "name": "NE2",
+     "resname": "GLN",
+     "chain": "A",
+     "resseq": -1
+    },
+    "5008": {
+     "xyz": [
+      11.70199966430664,
+      3.8289999961853027,
+      19.709999084472656
+     ],
+     "element": "O",
+     "name": "O3'",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5013": {
+     "xyz": [
+      18.33799934387207,
+      3.7929999828338623,
+      20.944000244140625
+     ],
+     "element": "N",
+     "name": "N7",
+     "resname": "DG",
+     "chain": "C",
+     "resseq": -1
+    },
+    "5025": {
+     "xyz": [
+      11.940999984741211,
+      6.156000137329102,
+      19.5310001373291
+     ],
+     "element": "O",
+     "name": "O5'",
+     "resname": "DA",
+     "chain": "C",
+     "resseq": -1
+    }
+   },
+   "selection_rule": "chem_div"
+  }
+ ]
+}

@@ -50,12 +50,21 @@ python scripts/run_experiment.py --config configs/experiments/exp03_filtration_c
 python scripts/reproduce_paper.py --version v33
 ```
 
-## Frozen evidence base (V33)
+## Frozen evidence base (V33 + EXP-02–08 batch)
 
 - 72,433 certified-valid support records; 2,167 H0–H2 discrete intervals
 - Same-graph filtration comparison: 16 structures × 2 graphs = 32 combos;
   barcode divergence RNA 14/16, PD 4/16
-- Bounded perturbation 1,600 tests / 0 violations; solver audit 120/120
+- Bounded perturbation 1,600 tests / 0 violations; solver audit 120/120;
+  stress suite 500/500 certified
+- Perturbation stability: mean |Δτ| 0.025→0.28 Å over σ=0.05–0.50 Å,
+  0 certificate failures
+- 20-seed grouped CV: RNA 0.550 ± 0.021; PD bound ~0.243; PD unbound ~0.190
+- Sensitivity: clash threshold flat (0.0–0.7), vdW radius monotone;
+  union-of-lenses irreplaceable (surrogates shift 82–97 % of births,
+  Spearman 0.18–0.58)
+- External PD validation (20 Dockground targets, 500 decoys):
+  macro Spearman 0.21–0.24, at development-set parity
 - See `results/reports/ablation_report_v3.md` and
   `results/reports/manuscript_v04_corrections.md`
 

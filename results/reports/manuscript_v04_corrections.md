@@ -188,3 +188,18 @@ layout.
   105/105 certified examples reproduce tau exactly (max residual
   6e-15; results/tables/witness_strat_residuals.csv), stratified by
   gap quartile / tau median / eta3 / chemistry type.
+
+## PyMOL renders (local, post-V33)
+
+`render_witness_pymol.py` (run inside PyMOL) renders certified witnesses
+on the source PDB: cartoon protein/nucleic context, per-patch colored
+spheres + contact dashes, black witness point, translucent magenta
+tau-ball. Three renders produced
+(`results/figures/pymol_witness/fig_pymol_*.png`, 300 dpi):
+
+- fig_pymol_1FOK.png (PD; gap 0.336, tau 2.768, cert pass)
+- fig_pymol_SimRNA_3IVN_5.png (RNA clash06; gap 0.450, tau 2.441)
+- fig_pymol_3dRNA_3IVN_3.png (RNA clean; gap 0.375, tau 2.548)
+
+The previous render_witness.pml stub assumed a different JSON schema and
+has been replaced by render_witness_pymol.py.
