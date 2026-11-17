@@ -110,3 +110,81 @@ residuals ~0.
     candidates)
 - Every rendered witness carries `certificate_passed=true` — the marked
   point is a certified common-support center, not an energy minimum.
+
+## 8. EXP-04 coordinate-perturbation stability — DONE
+
+8 structures x ~300 canonical patch sets x 4 noise levels
+(results/tables/path_drift.csv, patch_drift.csv). Mean absolute tau
+deviation scales near-linearly with sigma: 0.025 A (sigma=0.05), 0.050
+(0.10), 0.102 (0.20), 0.277 A (0.50); max 0.086 / 0.175 / 0.388 / 0.758 A.
+Zero support-certificate failures, zero uncertain results — consistent
+with the certified solver and the 1-Lipschitz style stability claim.
+Solver stress: 500/500 adversarial configurations (coincident, collinear,
+nested, extreme separation) certified, deterministic, witness-consistent
+(results/tables/solver_stress.json).
+
+## 9. EXP-06 20-seed grouped CV — DONE
+
+60/60 seed x task metric records (results/tables/exp06_20seed_metrics.csv,
+exp06_20seed_summary.csv). Macro-Spearman, 20 seeds:
+
+- RNA: best arm CleanFull_PTHS__nolj = 0.550 +/- 0.021
+- PD bound: ~0.243 +/- 0.008
+- PD unbound: ~0.190 +/- 0.009
+
+Seed variance is small; single-seed numbers in V0.4 may be cited with
+the multi-seed spread attached.
+
+## 10. EXP-07 sensitivity + patch-representation ablation — DONE
+
+Sensitivity (144 extraction units, 16 structures):
+- clash threshold 0.0-0.7: essentially flat (tau-median ~1.561->1.560;
+  interval count ~135) -> clash threshold choice is robust
+- vdW radius scale 0.90->1.10: monotone response (tau-median
+  1.698->1.416; intervals 117->140) -> continuous, not brittle
+
+Alternative patch representations (16/16 structures,
+results/tables/exp07_repr_summary.csv): replacing union-of-lenses
+support by centroid / enclosing-ball / single-contact surrogates shifts
+82-97% of path birth values by >0.1 A; Spearman agreement with
+union-tau is only 0.18-0.58 (dir: centroid 0.58 / enclosing 0.29 /
+single 0.33). Conclusion: the union-of-lenses representation is not
+replaceable by simpler geometric surrogates — this is a genuine
+representation ablation supporting the framework design.
+
+## 11. EXP-08 independent PD validation — DONE
+
+20 nonredundant Dockground protein-DNA targets, all 47 development
+targets excluded (experiments/exp08_external_validation/exp08_targets.csv);
+500 rigid-perturbation decoys with ligand-RMSD labels; FTDMP-compatible
+layout.
+
+- Feature extraction: ~490 rows x 3663 columns, ~0.2% NaN.
+- Audit status caveat: all rows were marked status=incomplete ONLY
+  because schemas/protein_dna_v6_features.json was absent on the HPC
+  clone (metadata/schema issue); events_truncated=false,
+  paths_truncated=false, support_incomplete=false,
+  hodge_incomplete=false, persistence_valid=true,
+  support_certificate_passed=true. The schema file has since been
+  deployed; evaluation accepted the rows under an explicit
+  accept_incomplete flag for exp08 only.
+- 20-seed grouped CV (results/tables/exp08_cv_metrics.csv): macro
+  Spearman 0.21-0.24 across arms — at parity with the development-set
+  0.24. Topology-bearing arms lead (A2_T 0.236, A6_TH 0.234,
+  CleanFull_PTHS__nolj 0.235). Natives land in top-5 for most arms.
+- Interpretation caveat (recorded in exp08 README): rigid perturbation
+  decoys are easier than true docking poses; a positive result supports
+  representation transfer, a negative one would not have been conclusive.
+
+## 12. EXP-03 fine-grid + event-value filtration — partial (final)
+
+- Fine-grid: 16/16 structures completed.
+- Event-value: all 16 submitted as array 49247232; per-structure JSONs
+  land in results/cmp_out_exp03_event/ as they finish. Comparison uses
+  the certified rank-invariant persistence (never snapshot Betti);
+  RNA structures carry ~1500 subsampled event scales so the O(S^2)
+  rank-invariant computation is the dominant cost (documented).
+- Stratified witness selection (EXP-02 extension): 16/16 structures,
+  105/105 certified examples reproduce tau exactly (max residual
+  6e-15; results/tables/witness_strat_residuals.csv), stratified by
+  gap quartile / tau median / eta3 / chemistry type.
