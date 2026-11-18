@@ -6,7 +6,7 @@
  "n_und_paths": 31699,
  "dir_tau_subsampled": true,
  "dir_tau": {
-  "error": "ValueError: dense GLMY kernel fallback dimension limit exceeded"
+  "error": "ValueError: Omega persistence map is not integer-valued within tolerance"
  },
  "dir_pairwise": {
   "n_scales": 1201,

@@ -230,3 +230,21 @@ Computational note: an O(S^3)->O(S^2) equivalence-preserving patch in
 rank_invariant_from_filtration (rolling inclusion-map product, verified
 interval-identical on completed PD runs) was required; the original
 version exceeded 24 h per RNA structure. Patch committed as 36852df.
+
+## 14. EXP-03 event-value — all 16 complete (mixed-tier final)
+
+1500-tier completed for 14/16 structures (incl. all PD and 5 RNA at
+1360-1500 scales). Per-rule fallback applied:
+- SimRNA-3IVN-5 and SimRNA-3RKF-2 dir_tau: 1500-tier failed with
+  "Omega persistence map is not integer-valued" (dense SVD fallback
+  Omega basis breaks certified integer persistence); 500-tier used,
+  where the subsampled scale set avoided the pathological complex.
+- SimRNA-3L0U-2 dir_tau: same failure at BOTH tiers -> undetermined.
+
+FINAL event-value result (dir graph):
+- 14/15 evaluable structures have DIFFERENT tau-vs-pairwise barcodes
+  (93%): RNA 7/7, PD 7/8 (only 1K79_ftd206 identical).
+- All computed filtrations chain_map_valid, residuals <= ~4e-11.
+- Honest caveat: the integer-valued failure is a genuine structural
+  limitation of the certified integer pipeline (dense SVD Omega bases
+  are non-integer); documented, not hidden.
