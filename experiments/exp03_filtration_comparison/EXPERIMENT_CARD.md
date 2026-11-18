@@ -1,4 +1,4 @@
-# EXP-03: Same-Graph Filtration Comparison (tau vs pairwise)
+﻿# EXP-03: Same-Graph Filtration Comparison (tau vs pairwise)
 
 - **Purpose**: Prove GSPH differs from ordinary pairwise filtration on
   the SAME directed graph, SAME path set, SAME GLMY boundary matrices --
@@ -23,3 +23,4 @@
 - **Artifacts**: `results/reports/filtration_compare*.json`,
   `results/tables/filtration_compare_summary.csv`,
   `results/tables/barcode_comparison_16structure.csv`.
+
