@@ -1,0 +1,383 @@
+{
+ "structure_id": "1TRO_ftd148s0d685063p28p13p16p243p144p285",
+ "source_dir": "pd_complex",
+ "mode": "eventvalue",
+ "n_dir_paths": 207,
+ "n_und_paths": 1068,
+ "dir_tau": {
+  "n_scales": 42,
+  "scale_min": 0.0,
+  "scale_max": 3.9904999530084213,
+  "chain_map_valid": true,
+  "chain_map_max_residual": 4.000355602329364e-12,
+  "kernel_backend": [
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse"
+  ],
+  "betti_final": {
+   "0": 5,
+   "1": 0,
+   "2": 0
+  },
+  "boundary_sq_residual": {
+   "1": 0.0,
+   "2": 0.0,
+   "3": 0.0
+  },
+  "n_k0": 22,
+  "tp_k0": 403.0,
+  "n_k1": 1,
+  "tp_k1": 2.0,
+  "n_k2": 0,
+  "tp_k2": 0.0,
+  "total_intervals": 23,
+  "intervals": {
+   "intervals_k0": [
+    [
+     0,
+     33,
+     false
+    ],
+    [
+     0,
+     34,
+     false
+    ],
+    [
+     0,
+     36,
+     false
+    ],
+    [
+     0,
+     42,
+     true
+    ],
+    [
+     1,
+     2,
+     false
+    ],
+    [
+     1,
+     8,
+     false
+    ],
+    [
+     3,
+     14,
+     false
+    ],
+    [
+     4,
+     23,
+     false
+    ],
+    [
+     5,
+     42,
+     true
+    ],
+    [
+     6,
+     28,
+     false
+    ],
+    [
+     7,
+     8,
+     false
+    ],
+    [
+     7,
+     8,
+     false
+    ],
+    [
+     9,
+     31,
+     false
+    ],
+    [
+     10,
+     29,
+     false
+    ],
+    [
+     11,
+     14,
+     false
+    ],
+    [
+     12,
+     42,
+     true
+    ],
+    [
+     13,
+     22,
+     false
+    ],
+    [
+     15,
+     42,
+     true
+    ],
+    [
+     16,
+     26,
+     false
+    ],
+    [
+     17,
+     18,
+     false
+    ],
+    [
+     19,
+     42,
+     true
+    ],
+    [
+     21,
+     36,
+     false
+    ]
+   ],
+   "intervals_k1": [
+    [
+     25,
+     27,
+     false
+    ]
+   ],
+   "intervals_k2": []
+  }
+ },
+ "dir_pairwise": {
+  "n_scales": 44,
+  "scale_min": 0.0,
+  "scale_max": 3.9904999530084213,
+  "chain_map_valid": true,
+  "chain_map_max_residual": 4.000355602329364e-12,
+  "kernel_backend": [
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse"
+  ],
+  "betti_final": {
+   "0": 5,
+   "1": 0,
+   "2": 0
+  },
+  "boundary_sq_residual": {
+   "1": 0.0,
+   "2": 0.0,
+   "3": 0.0
+  },
+  "n_k0": 22,
+  "tp_k0": 415.0,
+  "n_k1": 0,
+  "tp_k1": 0.0,
+  "n_k2": 0,
+  "tp_k2": 0.0,
+  "total_intervals": 22,
+  "intervals": {
+   "intervals_k0": [
+    [
+     0,
+     33,
+     false
+    ],
+    [
+     0,
+     34,
+     false
+    ],
+    [
+     0,
+     37,
+     false
+    ],
+    [
+     0,
+     44,
+     true
+    ],
+    [
+     1,
+     2,
+     false
+    ],
+    [
+     1,
+     8,
+     false
+    ],
+    [
+     3,
+     14,
+     false
+    ],
+    [
+     4,
+     23,
+     false
+    ],
+    [
+     5,
+     44,
+     true
+    ],
+    [
+     6,
+     28,
+     false
+    ],
+    [
+     7,
+     8,
+     false
+    ],
+    [
+     7,
+     8,
+     false
+    ],
+    [
+     9,
+     31,
+     false
+    ],
+    [
+     10,
+     29,
+     false
+    ],
+    [
+     11,
+     14,
+     false
+    ],
+    [
+     12,
+     44,
+     true
+    ],
+    [
+     13,
+     22,
+     false
+    ],
+    [
+     15,
+     44,
+     true
+    ],
+    [
+     16,
+     26,
+     false
+    ],
+    [
+     17,
+     18,
+     false
+    ],
+    [
+     19,
+     44,
+     true
+    ],
+    [
+     21,
+     37,
+     false
+    ]
+   ],
+   "intervals_k1": [],
+   "intervals_k2": []
+  }
+ }
+}

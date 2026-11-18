@@ -1,0 +1,17 @@
+structure_id,task,tau_src,tau_n_scales,tau_intervals,tau_valid,pairwise_src,pairwise_n_scales,pairwise_intervals,pairwise_valid,barcode_same
+1FOK_ftd158s0d697333p24p31p2p234p144p255,PD,1500,176.0,86.0,True,1500,143,83,True,False
+1FOK_ftd381s0d697333p30n11n4p36p153p90,PD,1500,355.0,119.0,True,1500,289,117,True,False
+1HJC_ftd142s0d681551n4n17p23p18p126p10,PD,500,500.0,204.0,True,500,500,160,True,False
+1HJC_ftd163s0d681551n2n21n28p36p153p90,PD,1500,71.0,39.0,True,1500,69,39,True,False
+1K79_ftd131s0d681027n3n11p48p180p27p144,PD,1500,41.0,17.0,True,1500,37,17,True,False
+1K79_ftd206s0d681027p25n2n10p27p153p90,PD,1500,48.0,44.0,True,1500,48,44,True,True
+1TRO_ftd148s0d685063p28p13p16p243p144p285,PD,1500,42.0,23.0,True,1500,44,22,True,False
+1TRO_ftd398s0d685063p22n14n9p36p153p90,PD,1500,114.0,65.0,True,1500,109,64,True,False
+3dRNA-3IVN-3,RNA,500,500.0,352.0,True,500,500,333,True,False
+3dRNA-3L0U-10,RNA,1500,1360.0,299.0,True,1500,1062,275,True,False
+3dRNA-3RKF-2,RNA,500,500.0,349.0,True,500,500,331,True,False
+FARFAR2-5SWD-S_000001_091_0001,RNA,500,500.0,426.0,True,500,500,388,True,False
+SimRNA-3IVN-5,RNA,500,500.0,358.0,True,500,500,327,True,False
+SimRNA-3L0U-2,RNA,failed:ValueError: dense GLMY kernel fallback dimension limit excee,,,,1500,1201,345,True,undetermined
+SimRNA-3RKF-2,RNA,500,500.0,338.0,True,1500,1130,314,True,False
+SimRNA-5SWD-7,RNA,500,500.0,413.0,True,500,500,389,True,False

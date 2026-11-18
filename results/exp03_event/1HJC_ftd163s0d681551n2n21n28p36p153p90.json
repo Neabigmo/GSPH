@@ -1,0 +1,603 @@
+{
+ "structure_id": "1HJC_ftd163s0d681551n2n21n28p36p153p90",
+ "source_dir": "pd_complex",
+ "mode": "eventvalue",
+ "n_dir_paths": 84,
+ "n_und_paths": 1034,
+ "dir_tau": {
+  "n_scales": 71,
+  "scale_min": 0.0,
+  "scale_max": 4.1097727066850815,
+  "chain_map_valid": true,
+  "chain_map_max_residual": 0.0,
+  "kernel_backend": [
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse"
+  ],
+  "betti_final": {
+   "0": 19,
+   "1": 7,
+   "2": 0
+  },
+  "boundary_sq_residual": {
+   "1": 0.0,
+   "2": 0.0,
+   "3": 0.0
+  },
+  "n_k0": 32,
+  "tp_k0": 1437.0,
+  "n_k1": 7,
+  "tp_k1": 121.0,
+  "n_k2": 0,
+  "tp_k2": 0.0,
+  "total_intervals": 39,
+  "intervals": {
+   "intervals_k0": [
+    [
+     0,
+     35,
+     false
+    ],
+    [
+     0,
+     71,
+     true
+    ],
+    [
+     0,
+     71,
+     true
+    ],
+    [
+     0,
+     71,
+     true
+    ],
+    [
+     0,
+     71,
+     true
+    ],
+    [
+     1,
+     71,
+     true
+    ],
+    [
+     2,
+     71,
+     true
+    ],
+    [
+     3,
+     71,
+     true
+    ],
+    [
+     4,
+     41,
+     false
+    ],
+    [
+     5,
+     53,
+     false
+    ],
+    [
+     6,
+     39,
+     false
+    ],
+    [
+     7,
+     71,
+     true
+    ],
+    [
+     8,
+     71,
+     true
+    ],
+    [
+     9,
+     36,
+     false
+    ],
+    [
+     10,
+     71,
+     true
+    ],
+    [
+     11,
+     71,
+     true
+    ],
+    [
+     12,
+     28,
+     false
+    ],
+    [
+     13,
+     34,
+     false
+    ],
+    [
+     14,
+     32,
+     false
+    ],
+    [
+     15,
+     71,
+     true
+    ],
+    [
+     16,
+     40,
+     false
+    ],
+    [
+     17,
+     71,
+     true
+    ],
+    [
+     18,
+     71,
+     true
+    ],
+    [
+     19,
+     71,
+     true
+    ],
+    [
+     20,
+     31,
+     false
+    ],
+    [
+     21,
+     71,
+     true
+    ],
+    [
+     22,
+     71,
+     true
+    ],
+    [
+     23,
+     38,
+     false
+    ],
+    [
+     24,
+     29,
+     false
+    ],
+    [
+     24,
+     71,
+     true
+    ],
+    [
+     25,
+     71,
+     true
+    ],
+    [
+     26,
+     27,
+     false
+    ]
+   ],
+   "intervals_k1": [
+    [
+     44,
+     71,
+     true
+    ],
+    [
+     48,
+     71,
+     true
+    ],
+    [
+     50,
+     71,
+     true
+    ],
+    [
+     51,
+     71,
+     true
+    ],
+    [
+     51,
+     71,
+     true
+    ],
+    [
+     64,
+     71,
+     true
+    ],
+    [
+     68,
+     71,
+     true
+    ]
+   ],
+   "intervals_k2": []
+  }
+ },
+ "dir_pairwise": {
+  "n_scales": 69,
+  "scale_min": 0.0,
+  "scale_max": 4.1097727066850815,
+  "chain_map_valid": true,
+  "chain_map_max_residual": 0.0,
+  "kernel_backend": [
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse",
+   "structured_sparse"
+  ],
+  "betti_final": {
+   "0": 19,
+   "1": 7,
+   "2": 0
+  },
+  "boundary_sq_residual": {
+   "1": 0.0,
+   "2": 0.0,
+   "3": 0.0
+  },
+  "n_k0": 32,
+  "tp_k0": 1394.0,
+  "n_k1": 7,
+  "tp_k1": 115.0,
+  "n_k2": 0,
+  "tp_k2": 0.0,
+  "total_intervals": 39,
+  "intervals": {
+   "intervals_k0": [
+    [
+     0,
+     35,
+     false
+    ],
+    [
+     0,
+     69,
+     true
+    ],
+    [
+     0,
+     69,
+     true
+    ],
+    [
+     0,
+     69,
+     true
+    ],
+    [
+     0,
+     69,
+     true
+    ],
+    [
+     1,
+     69,
+     true
+    ],
+    [
+     2,
+     69,
+     true
+    ],
+    [
+     3,
+     69,
+     true
+    ],
+    [
+     4,
+     40,
+     false
+    ],
+    [
+     5,
+     52,
+     false
+    ],
+    [
+     6,
+     38,
+     false
+    ],
+    [
+     7,
+     69,
+     true
+    ],
+    [
+     8,
+     69,
+     true
+    ],
+    [
+     9,
+     36,
+     false
+    ],
+    [
+     10,
+     69,
+     true
+    ],
+    [
+     11,
+     69,
+     true
+    ],
+    [
+     12,
+     28,
+     false
+    ],
+    [
+     13,
+     34,
+     false
+    ],
+    [
+     14,
+     32,
+     false
+    ],
+    [
+     15,
+     69,
+     true
+    ],
+    [
+     16,
+     39,
+     false
+    ],
+    [
+     17,
+     69,
+     true
+    ],
+    [
+     18,
+     69,
+     true
+    ],
+    [
+     19,
+     69,
+     true
+    ],
+    [
+     20,
+     31,
+     false
+    ],
+    [
+     21,
+     69,
+     true
+    ],
+    [
+     22,
+     69,
+     true
+    ],
+    [
+     23,
+     37,
+     false
+    ],
+    [
+     24,
+     29,
+     false
+    ],
+    [
+     24,
+     69,
+     true
+    ],
+    [
+     25,
+     69,
+     true
+    ],
+    [
+     26,
+     27,
+     false
+    ]
+   ],
+   "intervals_k1": [
+    [
+     43,
+     69,
+     true
+    ],
+    [
+     47,
+     69,
+     true
+    ],
+    [
+     49,
+     69,
+     true
+    ],
+    [
+     50,
+     69,
+     true
+    ],
+    [
+     50,
+     69,
+     true
+    ],
+    [
+     63,
+     69,
+     true
+    ],
+    [
+     66,
+     69,
+     true
+    ]
+   ],
+   "intervals_k2": []
+  }
+ }
+}

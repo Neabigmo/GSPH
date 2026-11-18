@@ -203,3 +203,30 @@ tau-ball. Three renders produced
 
 The previous render_witness.pml stub assumed a different JSON schema and
 has been replaced by render_witness_pymol.py.
+
+## 13. EXP-03 event-value filtration — FINAL (500-fallback caliber)
+
+Event-value (distinct birth values as filtration scales) completed for
+all 16 structures, merging tiers: 7 PD structures at full 1500-tier
+(their distinct scales were <1500, i.e. exact), 8 RNA + 1HJC_ftd142 at
+500-tier (quantile-subsampled, flagged `*_subsampled`).
+
+`results/tables/exp03_eventvalue_summary.csv` (dir graph, certified
+rank-invariant persistence):
+
+- tau-vs-pairwise barcodes DIFFER in 14/15 evaluable structures (93%)
+- RNA: 7/7 evaluable differ; PD: 7/8 differ (only 1K79_ftd206 identical)
+- 1 undetermined: SimRNA-3L0U-2 dir_tau hit the dense GLMY kernel
+  dimension limit (GSPH_GLMY_DENSE_MAX_ELEMENTS=4e6) at both tiers; a
+  raised-limit (2e8) rerun was submitted as job 49302780.
+- All computed filtrations chain_map_valid, residuals <= ~4e-11.
+
+Interpretation: at exact event-value resolution the tau-vs-pairwise
+divergence is STRONGER than the discrete-grid result (PD rose from 25%
+to 88% different) -- grid undersampling had masked PD-side differences.
+P0-1 should be reported at this caliber.
+
+Computational note: an O(S^3)->O(S^2) equivalence-preserving patch in
+rank_invariant_from_filtration (rolling inclusion-map product, verified
+interval-identical on completed PD runs) was required; the original
+version exceeded 24 h per RNA structure. Patch committed as 36852df.
