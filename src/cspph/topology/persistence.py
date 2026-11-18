@@ -309,26 +309,28 @@ def rank_invariant_from_filtration(boundaries_by_time: Sequence[Mapping[int, obj
     def modular(matrix):
         return _integer_csr(matrix)
 
-    def compose_maps(start: int, stop: int, chain_order: int):
-        source_dim = modular(boundaries_by_time[start].get(chain_order, _sparse.csr_matrix((0, 0)))).shape[1]
-        result = _sparse.identity(source_dim, format="csr", dtype=np.int64)
-        for step in range(start, stop):
-            result = modular(chain_maps_by_time[step][chain_order]) @ result
-        return result
+    # Pre-convert boundaries/maps to modular integers once
+    # (was O(S^2) reconversions of the same matrices).
+    _empty = _sparse.csr_matrix((0, 0))
+    mod_bounds = [modular(b.get(order, _empty)) for b in boundaries_by_time]
+    mod_bounds_next = [modular(b.get(order + 1, _empty)) for b in boundaries_by_time]
+    mod_maps = [modular(m.get(order, _empty)) for m in chain_maps_by_time]
+    base_ranks = [int(_sparse_rank_mod(mb)) if mb.shape[1] else 0
+                  for mb in mod_bounds_next]
 
     for start in range(times):
-        d_k = modular(boundaries_by_time[start].get(order, _sparse.csr_matrix((0, 0))))
-        z_basis, _ = _modular_rref_nullspace(d_k)
+        z_basis, _ = _modular_rref_nullspace(mod_bounds[start])
+        # induced(stop) = compose_maps(start, stop) @ z_basis; roll the
+        # running product instead of recomputing O(S) matmuls per pair
+        # (mathematically identical: product order is preserved).
+        induced = z_basis
         for stop in range(start, times):
-            d_next = modular(boundaries_by_time[stop].get(order + 1, _sparse.csr_matrix((0, 0))))
-            if stop == start:
-                induced = z_basis
-            else:
-                induced = compose_maps(start, stop, order) @ z_basis
+            if stop > start:
+                induced = mod_maps[stop - 1] @ induced
+            d_next = mod_bounds_next[stop]
             combined = _sparse.hstack((d_next, induced), format="csr")
-            base_rank = int(_sparse_rank_mod(d_next)) if d_next.shape[1] else 0
             combined_rank = int(_sparse_rank_mod(combined)) if combined.shape[1] else 0
-            ranks[start, stop] = combined_rank - base_rank
+            ranks[start, stop] = combined_rank - base_ranks[stop]
     return ranks
 
 
