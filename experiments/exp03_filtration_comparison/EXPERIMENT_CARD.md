@@ -18,8 +18,9 @@
   - Fine-grid: 16/16 complete; event-value: running (RNA ~1500 event
     scales, O(S^2) rank-invariant is dominant cost -- real slowness,
     verified by CPU profiling).
-- **Status**: grid DONE; event-value in progress (aggregate via
-  `aggregate_exp03.py`).
+- **Status**: DONE — 16/16 event-value complete (mixed-tier final;
+  14/15 evaluable tau-vs-pairwise barcodes differ). See corrections
+  §13–14 and `results/tables/exp03_eventvalue_summary.csv`.
 - **Artifacts**: `results/reports/filtration_compare*.json`,
   `results/tables/filtration_compare_summary.csv`,
   `results/tables/barcode_comparison_16structure.csv`.
