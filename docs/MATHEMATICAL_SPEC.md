@@ -9,8 +9,13 @@
   the patch).
 - **Common support** of patch sets `P_1..P_k`:
   `tau(P_1..P_k) = min_x max_i min_{c in P_i} clearance(x, c)` solved
-  exactly by enumerated affine quadratics (<=4 active balls in 3D) with a
-  numerical certificate (`certificate_passed`).
+  exactly: for each selection of one microcontact per patch, a weighted
+  1-center by enumerated affine quadratics (<=4 active balls in 3D) with a
+  numerical certificate (`certificate_passed`), then the minimum over
+  selections. Since a patch support is a union of contact lenses, `tau` is
+  not a patch minimum-enclosing-ball radius; it is the Čech-type nerve birth
+  of the thickened support family, and `tau_pw` its Rips-type (flag)
+  counterpart. Ordinary Čech is the zero-radius, one-point-per-patch case.
 - **Pairwise bound** `tau_pw(pi) = max_{i<j} tau(P_i, P_j)` — strictly a
   lower bound on `tau_GSPH(pi)`; the gap `eta_k = tau - tau_pw` is the
   higher-order support increment.
