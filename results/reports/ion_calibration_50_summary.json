@@ -1,0 +1,56 @@
+{
+  "summary": [
+    {
+      "cohort": "mg",
+      "selected": 10,
+      "measured": 10,
+      "full_cohort_size": 20,
+      "complete": 6,
+      "censored_fraction": 0.4,
+      "weighted_censored_fraction": 0.2,
+      "worker_error_count": 0,
+      "max_rss_kib": 1227380.0,
+      "sampled_core_hours_per_1000": 2.0022131666666665,
+      "sampled_core_hours_full_cohort": 0.04004426333333333,
+      "exhaustive_candidate_core_hours_per_1000_complete": 55.79508661048846,
+      "exhaustive_candidate_core_hours_full_cohort_complete_only": 0.8927213857678155
+    },
+    {
+      "cohort": "water",
+      "selected": 20,
+      "measured": 20,
+      "full_cohort_size": 300,
+      "complete": 20,
+      "censored_fraction": 0.0,
+      "weighted_censored_fraction": 0.0,
+      "worker_error_count": 0,
+      "max_rss_kib": 144396.0,
+      "sampled_core_hours_per_1000": 2.307008323456789,
+      "sampled_core_hours_full_cohort": 0.6921024970370367,
+      "exhaustive_candidate_core_hours_per_1000_complete": 263.51830472984244,
+      "exhaustive_candidate_core_hours_full_cohort_complete_only": 79.05549141895273
+    },
+    {
+      "cohort": "zn",
+      "selected": 20,
+      "measured": 20,
+      "full_cohort_size": 300,
+      "complete": 20,
+      "censored_fraction": 0.0,
+      "weighted_censored_fraction": 0.0,
+      "worker_error_count": 0,
+      "max_rss_kib": 309840.0,
+      "sampled_core_hours_per_1000": 1.3566245681327158,
+      "sampled_core_hours_full_cohort": 0.40698737043981476,
+      "exhaustive_candidate_core_hours_per_1000_complete": 2.411667360420744,
+      "exhaustive_candidate_core_hours_full_cohort_complete_only": 0.7235002081262232
+    }
+  ],
+  "missing": [],
+  "selection": {
+    "config_sha256": "8d8c2b4566f9da51c25ef087a84089337d45449e299772b0b731b8773ba85777",
+    "source_sha256": "ad1606962f551cc03f6d277e1db75e3921a28c2e359e613e42fc92abc90872ac",
+    "selection_sha256": "85c29b9c332605119bd98e1f2c4f772abea0fab669476c955d9e4c4554cb63f2"
+  },
+  "interpretation": "Size-stratum inverse-inclusion weights; full cohort sizes from source table. Exhaustive candidate-only projections exclude censored structures and all non-solver overhead; they are not full-run ETAs."
+}

@@ -1,0 +1,4 @@
+cohort,selected,measured,full_cohort_size,complete,censored_fraction,weighted_censored_fraction,worker_error_count,max_rss_kib,sampled_core_hours_per_1000,sampled_core_hours_full_cohort,exhaustive_candidate_core_hours_per_1000_complete,exhaustive_candidate_core_hours_full_cohort_complete_only
+mg,10,10,20,6,0.4,0.2,0,1227380.0,2.0022131666666665,0.04004426333333333,55.79508661048846,0.8927213857678155
+water,20,20,300,20,0.0,0.0,0,144396.0,2.307008323456789,0.6921024970370367,263.51830472984244,79.05549141895273
+zn,20,20,300,20,0.0,0.0,0,309840.0,1.3566245681327158,0.40698737043981476,2.411667360420744,0.7235002081262232
