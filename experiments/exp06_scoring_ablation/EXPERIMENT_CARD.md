@@ -18,3 +18,22 @@
 - **Artifacts**: `results/tables/exp06_20seed_metrics.csv`,
   `exp06_20seed_summary.csv`, `cv_splits_*.json`,
   `feature_group_manifest_*.csv`, `hardpair_*`, `interaction_*`.
+
+## Frozen hard-pair test
+
+`hardpair_frozen.py --config configs/experiments/exp06_hardpair_frozen.yaml
+--feat-dir <features> --out <outputs>` compares nested physical/pairwise,
+support-difference, and barcode tiers on unseen targets. Required inputs are
+real FTDMP feature parquets and successful audit JSONL records, in
+`<features>/pd_bound` and `<features>/pd_unbound` (a single-task config accepts
+a flat directory). Optional `--barcode-table` accepts CSV/parquet keyed uniquely
+by `structure_id`; unmatched candidates retain NaNs. These real inputs are not
+distributed here. Pair indices are frozen once per target/seed from labels and
+Tier-1 OOF scores and shared by all tiers. Five grouped folds and ten seeds,
+train-fold median imputation, target bootstrap, two-sided sign flips, and Holm
+over the two adjacent primary contrasts are fixed in YAML; the nonadjacent
+contrast is secondary. Per-seed and target-averaged seed-pooled summaries include
+macro Spearman (all evaluable targets), while hard-pair inference excludes
+targets without enough pairs. Every output records the config SHA256; retain
+the exact config used. Synthetic tests override rounds/seeds only for speed and
+are not evidence of real-data performance.

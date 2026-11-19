@@ -1,0 +1,46 @@
+tasks:
+  pd_bound: {label: label_cadscore, higher_better: true, group: group}
+  pd_unbound: {label: label_cadscore, higher_better: true, group: group}
+input_pattern: pd_ftdmp_s*.parquet
+audit_pattern: pd_ftdmp_s*.audit.jsonl
+# Apply feature_groups exclusions first. Explicit barcode/persistence readouts
+# extend its default EXCL allowlist, but never its diagnostic/size exclusions.
+# P and P2 both use patch_* after the same metadata/diagnostic/size filtering.
+# k1 paths have two vertices (pairwise); k2/k3 have three/four vertices.
+tiers:
+  T1:
+    name: physical + pairwise
+    add: ['^patch_', '^tau_2_', '^path_support_(mean|max)_k1$']
+  T2:
+    name: + support difference
+    add: ['^tau_[34]_', '^eta_', '^delta_tau_', '^path_support_(mean|max)_k[23]$']
+  T3:
+    name: + barcode
+    add: ['^persistence_', '.*_glmy_betti_', '^barcode_']
+hard_pairs:
+  q_hard: 0.75
+  q_amb: 0.50
+  ambiguity_model: T1
+  min_candidates: 15
+  min_pairs: 5
+  ties: sign_agreement
+cv:
+  folds: 5
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+rank_params:
+  objective: rank:pairwise
+  max_depth: 4
+  learning_rate: 0.05
+  subsample: 0.9
+  colsample_bytree: 0.9
+  tree_method: hist
+  n_jobs: -1
+rank_rounds: 80
+inference:
+  bootstrap: 10000
+  sign_flips: 10000
+  seed: 3
+  primary_contrasts: [T2-T1, T3-T2]
+  correction: Holm
+  # Two-sided Monte Carlo sign-flip, plus-one correction; secondary p_holm is NaN.
+  pooled: average within target across seeds before target resampling
