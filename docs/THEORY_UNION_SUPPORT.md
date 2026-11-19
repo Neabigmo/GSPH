@@ -57,7 +57,8 @@ Proposition 2. ∎
 
 Part (a) is the mathematical content of the solver's `≤ 4` active-ball
 certificate; (b)–(c) say that the only source of order-`>4` information is
-the choice among alternatives.
+the choice among alternatives. Order-3 and order-4 information
+(`τ > τ_pw`) exists already for single-contact patches.
 
 ## Proposition 2 (no fixed order suffices for union patches)
 
@@ -123,10 +124,14 @@ increment is created at the very first scale even for convex patches.
 increment must be allowed to grow linearly in the patch spread; Theorem 3
 gives coefficient `√(3/2)`, Proposition 2 shows at least `1/2`.
 
-*Reading.* For single-contact patches common support is a bounded affine
-perturbation of pairwise support (Jung constant √(3/2)). All unbounded
-higher-order information comes from union-valued alternatives and is
-controlled by their spread `δ`.
+*Reading.* Pairwise support does not recover common support even for
+single-contact patches: the tetrahedron already has `τ_pw = 0 < τ`, and
+`η > 0` is expected on real single-contact paths. For such patches,
+however, the increment is a bounded affine perturbation of pairwise support
+(Jung constant √(3/2)) and is decided by quadruples (Theorem 1b). The strict
+excess of common support over the quadruple value `τ^(4)`, and any increment
+that grows with geometry rather than with `r_max − r_min`, comes only from
+union-valued alternatives and is controlled by their spread `δ`.
 
 ## Theorem 4 (interleaving of persistent path modules)
 
