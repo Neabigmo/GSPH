@@ -13,7 +13,10 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from external_scoring_pm import paired_bootstrap
+try:
+    from experiments.external_scoring_pm import paired_bootstrap
+except ImportError:
+    from external_scoring_pm import paired_bootstrap
 
 TASKS = {'pd_bound': 'Bound_docking', 'pd_unbound': 'Unbound_docking'}
 ARMS = ['A1_P', 'A7_PTH', 'CleanFull_PTHS']
