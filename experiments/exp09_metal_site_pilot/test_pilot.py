@@ -10,7 +10,44 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from geometry import UnionSolver, cliques, pair_support, weighted_support
 from run import clustered_count, config_hash, crop_region, download, pair_graph, read_structure, release_is_test, reusable_result
-from run import execute, load_config, selected_records
+from run import execute, load_config, search_entries, selected_records, terminal
+
+
+def test_search_cache_keys_full_query(tmp_path):
+    calls = []
+    class Response:
+        def raise_for_status(self):
+            pass
+        def json(self):
+            return {"result_set": [{"identifier": "TEST"}]}
+    class Session:
+        def post(self, url, json, timeout):
+            calls.append(json)
+            return Response()
+    session = Session()
+    query = terminal("resolution", "less_or_equal", 1.5)
+    (tmp_path / "search_water.json").write_text(json.dumps({"result_set": [{"identifier": "OLD"}]}))
+    assert search_entries(session, query, tmp_path, "water") == ["test"]
+    assert search_entries(session, dict(reversed(list(query.items()))), tmp_path, "water") == ["test"]
+    assert len(calls) == 1
+    changed = terminal("resolution", "less_or_equal", 2.)
+    assert search_entries(session, changed, tmp_path, "water") == ["test"]
+    assert len(calls) == 2
+    assert calls[-1]["query"] == changed
+    assert len(list(tmp_path.glob("search_water_*.json"))) == 2
+
+
+def test_search_empty_results_and_request_error(tmp_path):
+    class Session:
+        def post(self, *args, **kwargs):
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: {})
+    assert search_entries(Session(), {}, tmp_path, "empty") == []
+    class ErrorSession:
+        def post(self, *args, **kwargs):
+            raise RuntimeError("request failed")
+    with pytest.raises(RuntimeError, match="request failed"):
+        search_entries(ErrorSession(), {}, tmp_path, "error")
+    assert not list(tmp_path.glob("search_error_*.json"))
 
 
 def test_run_retries_missing_download_and_result(tmp_path, monkeypatch):

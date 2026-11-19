@@ -100,12 +100,13 @@ def annotate_dates(data, cfg):
 
 
 def search_entries(session, query, data, name):
-    target = data / f"search_{name}.json"
+    payload = {"query": query, "return_type": "entry", "request_options": {"return_all_hits": True}}
+    fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    target = data / f"search_{name}_{fingerprint}.json"
     if target.exists():
         response = json.loads(target.read_text())
     else:
-        result = session.post("https://search.rcsb.org/rcsbsearch/v2/query", json={
-            "query": query, "return_type": "entry", "request_options": {"return_all_hits": True}}, timeout=90)
+        result = session.post("https://search.rcsb.org/rcsbsearch/v2/query", json=payload, timeout=90)
         result.raise_for_status()
         response = result.json()
         target.write_text(json.dumps(response))
