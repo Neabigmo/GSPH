@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=union-audit
-#SBATCH --cpus-per-task=24
+#SBATCH --cpus-per-task=32
 #SBATCH --mem=90G
 #SBATCH --time=3-00:00:00
 set -euo pipefail

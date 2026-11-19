@@ -43,3 +43,16 @@ feature tables are joined by candidate identity, with labels restored from the
 supplied OOF `y_true` column, never its predictions. Task-specific manifest
 validation and tier nonemptiness checks apply; no tier regex or statistical rule
 changed. See `docs/HPC_EVALUATION.md` for required sidecars and offline CPU jobs.
+
+### Frozen hard-pair result (v2 per-candidate features, 47 targets, seeds 0–9)
+
+Pooled hard-pair win-rate differences (`results/tables/hardpair_frozen_summary_pooled.csv`; per seed and per target in the sibling files):
+
+| Task | Contrast | Δ win rate [95% CI] | Holm p |
+|---|---|---|---|
+| pd_bound | T2 − T1 (+ support difference) | +0.0006 [−0.0054, 0.0064] | 0.84 |
+| pd_bound | T3 − T2 (+ barcode) | +0.0269 [0.0129, 0.0399] | 0.0006 |
+| pd_unbound | T2 − T1 | −0.0059 [−0.0107, −0.0014] | 0.025 |
+| pd_unbound | T3 − T2 | −0.0022 [−0.0086, 0.0043] | 0.52 |
+
+Candidate pool: `results/tables/ftdmp_candidates.csv`; VoroMQA per-candidate scores on the same pool: `results/tables/pd_voromqa_scores.jsonl`.
