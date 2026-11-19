@@ -102,7 +102,7 @@
 - Dürr et al. AllMetal3D: joint prediction of localization, identity and coordination geometry of common metal ions in proteins. bioRxiv 2025. 10.1101/2025.02.05.636627
 - Lin et al. MIB: Metal Ion-Binding Site Prediction and Docking Server. J Chem Inf Model 2016. 10.1021/acs.jcim.6b00407
 - Lu et al. MIB2: metal ion-binding site prediction and modeling server. Bioinformatics 2022. 10.1093/bioinformatics/btac534
-- Sánchez-Aparicio et al. BioMetAll: Identifying Metal-Binding Sites in Proteins from Backbone Preorganization. J Chem Inf Model 2021 (ChemRxiv 10.26434/chemrxiv.12668651.v1)
+- Sánchez-Aparicio et al. BioMetAll: Identifying Metal-Binding Sites in Proteins from Backbone Preorganization. J Chem Inf Model. 10.1021/acs.jcim.0c00827
 - Babor et al. Prediction of transition metal-binding sites from apo protein structures (CHED). Proteins 2007. 10.1002/prot.21587
 - Brylinski, Skolnick. FINDSITE-metal. Proteins 2010. 10.1002/prot.22913
 - Zhang et al. PinMyMetal: a hybrid learning system to accurately model transition metal binding sites in macromolecules. Nat Commun 2025. 10.1038/s41467-025-57637-5
