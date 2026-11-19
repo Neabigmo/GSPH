@@ -1,5 +1,41 @@
 # 核酸外部打分：已有分数与小规模试算
 
+## PM 全量补算：与 EXP-06 对齐
+
+全量已取得每方法 826 个结构的能量，含 20 个 native；评估严格排除 native，主口径为 **20 靶标、806 个 decoy、官方 RMSD、逐靶标 Spearman 后宏平均**。复用了上次五靶标 210 个结构的有效分数，新增评分其余 616 个结构，没有重复跑已有分数。
+
+核对依据：`tasks/rna/rna_quality_driver.py::_labels/enumerate_units` 按文件名读取 `PM_decoy_set/RMSD/<target>.rmsd` 至 `label_rmsd_official`，以文件名等于靶标名识别 native；`experiments/exp06_scoring_ablation/run_ablation.py::TASKS/load_task/rank_metrics` 选择 `rna_clash06`、成功 audit、`kind == decoy`，标签方向取 `-RMSD`，逐靶标再平均。`results/tables/candidate_coverage.json` 保存 `raw_rows=826, audit_records=970, audit_ok=826, rows_after_audit=826, native_excluded=20, final_rows=806, groups=20`。**970 是历史 audit 记录数，不是该 EXP-06 评价池；806 是去 native 后的候选数，不是漏算 20 个结构。**目标集合与 `cv_splits_rna.json` 的 20 靶标完全相同。
+
+三个势能均越低越好，所以使用 `Spearman(-energy,-RMSD)`，等价于 `Spearman(energy,RMSD)`；不取绝对值、不对每靶标翻转方向。clash06 过滤的是本方法接触，不修改外部工具所读坐标或 RMSD 标签。已有覆盖审计与驱动支持同一 PM 池，但原始 GSPH 逐候选 OOF/特征仍不在云端，不能额外提供逐坐标哈希级冻结认证。
+
+| 方法 | 评价靶标 | decoy 数 | 宏平均 Spearman | 全部 826 个分数对应的累计评分秒 |
+|---|---:|---:|---:|---:|
+| rsRNASP | 20 | 806 | **0.579827** | 331.187 |
+| cgRNASP | 20 | 806 | **0.559575** | 29.451 |
+| DFIRE-RNA | 20 | 806 | **0.518217** | 104.650 |
+
+累计评分时间包含原五靶标试算；本次新增进程评分合计 318.599 秒，本次补算总 wall time 319.020 秒，累计有效评分约 465.288 秒（7.75 分钟）。`external_scoring_pm_full_runtime.csv` 的 `reused_pilot` 行本次时间记 0，原时间仍在 pilot CSV，不把缓存命中当作零成本全量推理。代码提交号与编译方式沿用下文固定版本；没有重新训练势能。
+
+### 配对结果：20 划分均值缺失，单划分比较单独标记
+
+`exp06_20seed_metrics.csv` 只有 `task,seed,arm,spear,top1,top5,top10`，`exp06_20seed_summary.csv` 只有宏平均的 mean/std/count，**没有每靶标×划分值**，因此不能据此恢复“每靶标的 20 划分均值”或其按靶标的配对 CI。已有 20 划分宏平均：A1_P=0.539144、A7_PTH=0.541698、CleanFull_PTHS__nolj=0.549541；这些不是下面 CI 的输入。
+
+仓库确有 `metrics_rna.json` / `metrics_v2_rna.json` 的单次运行逐靶标列表。它们的顺序由 `run_ablation.py::spearman_macro` 的 `groupby` 默认排序确定；v2 同样调用导入的 `rank_metrics`。每臂恰有 20 个有限值，其均值与保存 macro 一致，故按已保存 fold 中靶标名的字典序恢复映射。单划分保存值全部导出到 `external_scoring_pm_gsph_saved_per_target.csv`；A1_P、A7_PTH、CleanFull_PTHS__nolj 与压缩 B9_PcT2H2 均保留，**不挑最好的一臂冒充所有方法**。
+
+下表是 **A7_PTH 单划分** 的补充性配对比较，非请求的 20 划分均值比较。差值始终 `GSPH rho - 外部 rho`，20 个靶标成对重采样 2,000 次，NumPy default_rng seed=0，百分位 95% CI。抽样单位是靶标，不是 decoy 或划分；CI 未多重校正，也不包含训练划分不确定性。
+
+| 外部方法 | 单划分 A7_PTH−外部宏平均差 | 靶标配对 bootstrap 95% CI |
+|---|---:|---|
+| rsRNASP | −0.031982 | [−0.170491, 0.087237] |
+| cgRNASP | −0.011730 | [−0.157156, 0.113866] |
+| DFIRE-RNA | 0.029628 | [−0.115931, 0.161320] |
+
+全部四臂×三方法的逐靶标差值和 12 个 CI 分别在 `external_scoring_pm_paired_single_split.csv`（240 行）和 `external_scoring_pm_bootstrap_single_split.csv`；`reference_scope=saved_single_split_not_20split_mean` 禁止将其误引为 20 划分均值。补齐 `target,seed,arm,rho`（每臂 20×20 行）或对应 OOF 后，才能完成所要求的 20 划分均值配对结果。
+
+全量输出位于 `results/tables/`：`external_scoring_pm_full_scores.csv`（3×826=2,478 行）、`external_scoring_pm_full_per_target.csv`（60 行；主 rho 排除 native，另留含 native 的诊断列）、`external_scoring_pm_full_runtime.csv`（60 行）。复核命令：`python experiments/external_scoring_pm.py --tables results/tables`；它检查完整数量、匹配已保存靶标集合、重算评价及上述单划分配对 bootstrap。原始 PDB 与评分二进制仍保存在仓库外。
+
+## 初次盘点记录（以下为全量补算前的历史状态）
+
 原则是先复用已有分数，不重跑完整数据集。本次只对 PM 的 **5 个靶标、210 个结构（含 5 个 native）**执行了 rsRNASP、cgRNASP、DFIRE-RNA；没有运行全部 826 个结构，没有重跑 FTDMP/VoroMQA，也没有生成 GSPH 折外预测。
 
 ## 结论与缺口

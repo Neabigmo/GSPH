@@ -1,0 +1,9 @@
+method,cohort,threshold_A,n_requested,n_downloaded,n_pass_structure_numeric_filters,n_design_eligible,n_scored,TP,FP,FN,precision,recall,f1,tp_mean_error_A,tp_median_error_A,status
+Metal3D,zn,1.0,38,38,32,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+Metal3D,zn,2.0,38,38,32,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+Metal3D,mg,1.0,3,3,0,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+Metal3D,mg,2.0,3,3,0,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+AllMetal3D,zn,1.0,38,38,32,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+AllMetal3D,zn,2.0,38,38,32,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+AllMetal3D,mg,1.0,3,3,0,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC
+AllMetal3D,mg,2.0,3,3,0,,0,,,,,,,,,not_evaluated_CPU_constraint_and_incomplete_reference_QC

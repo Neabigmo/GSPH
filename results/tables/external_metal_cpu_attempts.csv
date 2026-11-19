@@ -1,0 +1,4 @@
+method,attempt,input_pdb,source_version,threads,batch_size,status,wall_seconds_lower_bound,models_loaded_seconds,voxelization_seconds,evidence
+Metal3D,map_location_only,12UM,09cbfb3c30e71e4fbea7e535072506c66af97cd9,1,1,failed_before_weight_load,,,,AssertionError: Torch not compiled with CUDA enabled at processStructures CUDA allocation
+AllMetal3D,unmodified_import,,0.7.3,1,,failed_import,,,,ImportError: No CUDA detected by PyTorch
+AllMetal3D,minimal_device_patch,12UM,0.7.3,1,1,stopped_without_completed_prediction,300,0.725,3.901,models loaded and voxelized; CPU inference still running after more than five minutes
