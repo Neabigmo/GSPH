@@ -102,3 +102,18 @@
 4. 拿到 PM 诱饵集后跑 RNA 统计势。
 5. 离子位点在时间外测集定稿后跑 Metal3D 和 PinMyMetal；AllMetal3D 交给有 GPU 的节点。
 6. 每个方法产出逐候选分数 CSV，统一评估脚本出表，写回本文档。
+
+## 6. 执行状态（按"现成能用就不重跑"收窄后）
+
+| 方法 | 状态 | 结果 | 出处 |
+|---|---|---|---|
+| Čech / α、Rips | 已完成：在控制结构上计算，原归档结构做汇总 | 零半径 τ 与精确 miniball 半径的最大差为 1.1×10⁻¹⁴ Å；patch 层无向 τ 与两两支撑的条形码，RNA 有 12/24 个"结构×阶"不同，蛋白-DNA 有 2/21 个不同 | [cech_rips_compare.md](../results/reports/cech_rips_compare.md) |
+| 持久路径同调（Chowdhury–Mémoli） | 直接用仓库已有的 `edgew` 结果 | 尺度是共价步数，只作参照 | 同上 |
+| rsRNASP / cgRNASP / DFIRE-RNA | 已在 PM 全量上重跑（806 个 decoy、20 个靶标），共 8 分钟 CPU | 宏平均 Spearman 分别为 0.580 / 0.560 / 0.518；本方法 0.550，差异不显著 | [external_scoring_inventory.md](../results/reports/external_scoring_inventory.md) |
+| FTDMP 官方排序 | 已下载官方逐候选排序（每个条件 9,400 个候选） | 等本方法的候选清单到了再做同池对齐 | 同上 |
+| VoroMQA | 官方包里没有它的分数 | 等超算找到原分数文件；找不到再在子集上补跑 | 同上 |
+| Metal3D | 在 32 个合格的 Zn 时间外结构上推理中（只把设备改为 CPU） | 69 个 Zn 位点作参考，但外部质控只做了一部分 | [external_metal_site.md](../results/reports/external_metal_site.md) |
+| AllMetal3D | 移出主表：CPU 上单个小结构 15 分钟也跑不完，按成本决定不租 GPU | 补充材料引用原文数字，注明是序列隔离测试集、训练截至 2021-03-05 | — |
+| 持久路径拉普拉斯、PinMyMetal、HADDOCK3、元素特异持久同调 | 暂缓 | — | — |
+| 3dRNAscore、DDNA3、ITScore-PR、3dRPC | 需要注册账号或代码来源不明，已列给 Robin | — | — |
+| ARES | 公开的只有示例 dummy 权重 | 不进入比较 | — |
