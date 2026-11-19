@@ -19,7 +19,7 @@ RMSD/DI labels (external/rsRNASP/PM_decoy_set/{RMSD,DI}/<target>.*) and
 reports per-target Spearman correlation and top-1 quality.
 
 Score direction: all of rsRNASP/cgRNASP are energies where lower = better.
-Lower RMSD / higher DI = better structure.
+Lower RMSD / lower DI = better structure (check paired PM labels before reporting).
 """
 import os
 import sys

@@ -37,3 +37,9 @@ macro Spearman (all evaluable targets), while hard-pair inference excludes
 targets without enough pairs. Every output records the config SHA256; retain
 the exact config used. Synthetic tests override rounds/seeds only for speed and
 are not evidence of real-data performance.
+
+Compact exports may instead be supplied with `--v2-dir`: the three per-task
+feature tables are joined by candidate identity, with labels restored from the
+supplied OOF `y_true` column, never its predictions. Task-specific manifest
+validation and tier nonemptiness checks apply; no tier regex or statistical rule
+changed. See `docs/HPC_EVALUATION.md` for required sidecars and offline CPU jobs.

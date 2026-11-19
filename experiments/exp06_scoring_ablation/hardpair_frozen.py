@@ -72,6 +72,76 @@ def load_task(directory, config, task_config, barcode_table=None):
     return frame.sort_values([group, 'structure_id']).reset_index(drop=True)
 
 
+def load_v2(directory, task, manifest_path=None):
+    """Join compact exports by candidate identity, never by row position.
+
+    build_v2_features preserves structure_id/group but does not export labels.
+    The original runner gets labels from the raw table; its OOF y_true is the
+    available lossless label source when only compact exports are supplied.
+    """
+    directory = Path(directory)
+    keys = ['structure_id', 'group']
+    frame = None
+    for name in ('physical_compact_v2', 'topology_features_v2', 'hodge_features_v2'):
+        extra = pd.read_parquet(directory / f'{name}_{task}.parquet')
+        if not set(keys) <= set(extra) or extra[keys].isna().any().any():
+            raise ValueError(f'{name}: nonmissing structure_id/group required')
+        extra[keys] = extra[keys].astype(str)
+        if extra.duplicated(keys).any():
+            raise ValueError(f'{name}: duplicate candidate keys')
+        if frame is None:
+            frame = extra
+            continue
+        if set(map(tuple, frame[keys].to_numpy())) != set(map(tuple, extra[keys].to_numpy())):
+            raise ValueError(f'{name}: candidate pool differs from physical table')
+        shared = [c for c in extra if c in frame and c not in keys]
+        joined = frame.merge(extra, on=keys, validate='one_to_one', suffixes=('', '__other'))
+        for col in shared:
+            left, right = joined[col], joined[col + '__other']
+            if not (left.eq(right) | (left.isna() & right.isna())).all():
+                raise ValueError(f'{name}: conflicting shared column {col}')
+        frame = joined.drop(columns=[c + '__other' for c in shared])
+    sources = [directory / f'{name}_{task}.parquet' for name in ('oof_v2', 'oof')]
+    labels = None
+    for source in sources:
+        if not source.exists():
+            continue
+        oof = pd.read_parquet(source).rename(columns={'group_id': 'group', 'y_true': 'label_cadscore'})
+        needed = keys + ['label_cadscore']
+        if not set(needed) <= set(oof):
+            raise ValueError(f'{source.name}: need structure_id, group_id/group, y_true')
+        oof = oof[needed].copy()
+        oof[keys] = oof[keys].astype(str)
+        oof = oof.drop_duplicates()
+        if oof.duplicated(keys).any():
+            raise ValueError(f'{source.name}: inconsistent labels across models')
+        if labels is None:
+            labels = oof
+        else:
+            overlap = labels.merge(oof, on=keys, suffixes=('', '__other'))
+            if not overlap.label_cadscore.eq(overlap.label_cadscore__other).all():
+                raise ValueError('Conflicting labels between OOF files')
+    if labels is None:
+        raise ValueError('Compact exports omit labels: need oof_v2_<task>.parquet or oof_<task>.parquet')
+    if 'label_cadscore' in frame:
+        check = frame.merge(labels, on=keys, how='left', validate='one_to_one', suffixes=('', '__other'))
+        if not check.label_cadscore.eq(check.label_cadscore__other).all():
+            raise ValueError('Compact and OOF labels disagree')
+    else:
+        frame = frame.merge(labels, on=keys, how='left', validate='one_to_one')
+    if frame.empty or not np.isfinite(frame.label_cadscore.to_numpy(float)).all():
+        raise ValueError('Every compact candidate must have a finite OOF label')
+    manifest_path = manifest_path or Path(__file__).resolve().parents[2] / 'results/tables/feature_manifest_v2.csv'
+    manifest = pd.read_csv(manifest_path)
+    registered = set(manifest.loc[manifest.scenario == task, 'feature_name'])
+    # Metadata is retained; only registered columns can enter a feature tier.
+    metadata = set(keys + ['row', 'protein', 'kind', 'label_cadscore'])
+    frame = frame[[c for c in frame if c in registered or c in metadata]]
+    if not registered:
+        raise ValueError(f'No feature manifest entries for {task}')
+    return frame.sort_values(keys).reset_index(drop=True)
+
+
 def predict_oof(frame, columns, task, config, seed):
     import xgboost as xgb
 
@@ -161,7 +231,7 @@ def summarize(table, config):
     return pd.DataFrame(rows)
 
 
-def run(config_path, feat_dir, out, barcode_table=None):
+def run(config_path, feat_dir, out, barcode_table=None, v2_dir=None):
     raw = Path(config_path).read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
     config = yaml.safe_load(raw)
@@ -169,8 +239,13 @@ def run(config_path, feat_dir, out, barcode_table=None):
     for task, task_config in config['tasks'].items():
         # Multiple tasks use task-named subdirectories; a flat directory is
         # accepted only for a single-task configuration to avoid reusing a pool.
-        directory = Path(feat_dir) / task if len(config['tasks']) > 1 else Path(feat_dir)
-        frame = load_task(directory, config, task_config, barcode_table)
+        if v2_dir is not None:
+            if barcode_table:
+                raise ValueError('--barcode-table currently requires --feat-dir')
+            frame = load_v2(v2_dir, task)
+        else:
+            directory = Path(feat_dir) / task if len(config['tasks']) > 1 else Path(feat_dir)
+            frame = load_task(directory, config, task_config, barcode_table)
         tiers = select_tiers(frame.columns, config)
         selected[task] = tiers
         for seed in config['cv']['seeds']:
@@ -194,11 +269,13 @@ def run(config_path, feat_dir, out, barcode_table=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
-    parser.add_argument('--feat-dir', type=Path, required=True)
+    inputs = parser.add_mutually_exclusive_group(required=True)
+    inputs.add_argument('--feat-dir', type=Path)
+    inputs.add_argument('--v2-dir', type=Path)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--barcode-table', type=Path)
     args = parser.parse_args()
-    run(args.config, args.feat_dir, args.out, args.barcode_table)
+    run(args.config, args.feat_dir, args.out, args.barcode_table, args.v2_dir)
 
 
 if __name__ == '__main__':
