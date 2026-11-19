@@ -33,7 +33,7 @@
   - **至少 3 个大分子配位原子，来自至少 2 个残基**（否则不是多片共同见证问题）；1–2 个大分子配体、其余为水的位点单独放一层，不进主指标。
   - 排除辅因子决定几何的金属：血红素 Fe、Fe–S 簇、叶绿素 Mg、钴胺素 Co 等（这些位点由辅因子而非蛋白配体组合决定）。
   - 配位壳中有对称拷贝原子的位点（晶体接触）标记出来，主评测中排除，单独报告。
-- **去冗余与划分**：MMseqs2 按 30% 序列一致性聚类，聚类作为分组交叉验证的组（与仓库现有分组 CV 一致）；另设时间外测集：只用对照方法训练截止日之后发布的结构（每个对照的截止日需逐一核实；AlphaFold 3 训练截止为 2021-09-30）。
+- **去冗余与划分**：MMseqs2 按 30% 序列一致性聚类，聚类作为分组交叉验证的组（与仓库现有分组 CV 一致）；另设时间外测集，按 §4.1 的证据与未知截止日处理规则划分。AlphaFold 3 的标准模型以 2021-09-30 为结构训练发布日期截止，而不是 PDB 下载日期；不能用这个日期替代全部对照的截止日。
 - **apo 设定（更难，第二阶段）**：同一 UniProt 的无金属结构，与 holo 结构叠合后，把 holo 的离子位置作为真值，检验构象变化下的鲁棒性。
 
 ### 2.2 结构水（第二任务）
@@ -76,6 +76,35 @@
 | 本仓库内部 | 两两规则（所有配体对都 ≤ δ）；配体质心；`facetmax`、`edge`、`shuffled` 出生规则 | 同复合物同复合形，只换出生规则 |
 
 其中"两两规则"和"质心"是必需性检验的核心对照：两两规则没有点，质心有点但不保证同时配位。
+
+### 4.1 对照方法的训练截止日与时间外测集
+
+下表区分数据库快照、PDB 首次发布日期切分和随机留出；独立测试不必然代表时间外测试。引号内摘录英文原文，每段不超过 25 词；“未给出”只针对已取得的原文，不能把论文发表时间、代码提交时间或数据归档时间当作训练截止日。对未取得完整正文或补充材料的项目，表中明确保留核查缺口，不宣称已经证明论文没有报告日期。
+
+| 方法 | 训练数据截止 | 依据 | 出处 |
+|---|---|---|---|
+| Metal3D | PDB 下载快照 **2021-03-05**。独立测试：同一数据池中按序列隔离的 59 个结构，非时间切分，未给出测试结构发布日期区间。 | Methods / Dataset：“The input PDB files for training were obtained from the RCSB”及“(downloaded 5th March 2021)”。 | [论文全文](https://www.nature.com/articles/s41467-023-37870-6)；[PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10175565/) |
+| Metal1D | 统计概率图使用与 Metal3D 相同的 **2021-03-05** 快照，不能因其属于几何方法就忽略拟合数据。独立测试同上。 | Results：“A probability map for all zinc coordination motifs was extracted from all training structures”。 | [论文 Metal1D / Dataset](https://www.nature.com/articles/s41467-023-37870-6) |
+| AllMetal3D | **2021-03-05**。独立测试：序列划分及 Metal3D 选择性测试结构；未给出独立的发布日期区间，不作时间外集。 | Dataset：“We used the same training cutoff (5th March 2021) as for Metal3D.” | [bioRxiv v1 全文](https://www.biorxiv.org/content/10.1101/2025.02.05.636627v1.full) |
+| MIB | **无训练，模板库日期未给出**。独立测试集时间未给出。不能把其他论文使用的“2016 年之后”测试集反推成 MIB 的快照日。 | 摘要：“the fragment transformation method was used for structural comparison between query proteins and templates without any data training.” | [论文摘要及模板库说明](https://pubs.acs.org/doi/10.1021/acs.jcim.6b00407) |
+| MIB2 | 无独立神经网络训练，依赖模板和金属类型特异评分；**模板库日期未给出（已取得材料中未见）**。独立测试集时间未核实，尚未取得完整补充材料。 | 摘要：“MIB2 offers marked improvements over MIB by collecting more MIB residue templates and using the metal ion type-specific scoring function.” | [论文](https://doi.org/10.1093/bioinformatics/btac534)；[官方方法说明](https://combio.life.nctu.edu.tw/MIB2/introduction) |
+| BioMetAll | 无机器学习训练、无检索模板库，但从结构统计标定几何参数；**参数化数据库日期未给出（已取得材料中未见）**。独立测试结构的时间区间未给出。 | 摘要：“We first report the set of convenient geometric descriptors of the backbone needed for the algorithm and their parameterization from a statistical analysis.” | [论文](https://pubs.acs.org/doi/10.1021/acs.jcim.0c00827)；[官方代码](https://github.com/insilichem/biometall) |
+| CHED（Babor 2007） | **未给出／待核实**：不能将几何规则等同于没有参数开发集；正文与补充材料未取得，训练或参数标定数据日期及独立测试时间均未核实。 | 已取得摘要仅说明 apo 预测：“Thus, effective predictions need to be based on the structure of the apo state.” 此句不提供截止日。 | [论文及摘要](https://doi.org/10.1002/prot.21587) |
+| FINDSITE-metal | **论文未给出** MDB/PDB 快照日；含 SVM 和朴素贝叶斯训练，不能归为纯模板无训练。测试：860 个蛋白上的二折交叉验证，未给出独立时间外区间。 | Methods：“To avoid memorization of the dataset, we use a 2-fold cross validation protocol.” | [PMC 全文：Dataset / Binding residue prediction](https://pmc.ncbi.nlm.nih.gov/articles/PMC3060289/) |
+| PinMyMetal | 正式论文使用 **2024-04** PDB 快照（未给出日），不是早期预印本的 2023-04-22。独立测试：分层随机 30%，另测 Metal3D/TEMSP 数据，均未按新发布日期定义。 | Methods：“We process the April 2024 version of the PDB”；“Ultimately, 70% of the data are allocated to the training set and 30% to the test set”。 | [正式论文 Methods](https://www.nature.com/articles/s41467-025-57637-5) |
+| AlphaFill | **无训练，模板检索序列库日期 2021-02-01（按正文原文）**；PDB-REDO 坐标库快照日未单独给出。正文另称 AlphaFold 模型库为 2022-02，不能混为模板日期或擅自修正原文年份。验证：28,619 次同序列转移，非时间外集，发布日期区间未给出。 | Methods：“a PDB-REDO-specific sequence database (as of 1 February 2021) was used.” | [论文 Methods / Software and data](https://www.nature.com/articles/s41592-022-01685-y) |
+| AlphaFold 3 | 标准模型的结构训练截止 **2021-09-30（PDB 发布日期）**；PDB 下载快照为 2023-01-12，不是训练截止。PoseBusters 专用模型截止 2019-09-30。独立 Recent PDB 测试：**2022-05-01—2023-01-12**；PoseBusters：2021 年起发布。 | Methods：“No structural data used during training were released after 30 September 2021”；“Training used a version of the PDB downloaded 12 January 2023”。 | [论文 Methods：Training regime / Recent PDB evaluation set / Data availability](https://www.nature.com/articles/s41586-024-07487-w) |
+| IonCom | **论文未给出** BioLiP 训练／模板库快照日期。测试：2,100 个非冗余蛋白上的五折交叉验证；未报告独立时间外测试区间。 | §2.1：“This set contains 2100 protein entries bound with 3075 ion molecules”；§3：“For each ion ligand, the dataset is randomly divided into five parts”。 | [作者提供的论文全文 PDF](https://zhanggroup.org/papers/2016_9.pdf) |
+| LMetalSite | 监督训练结构发布于 **2020-01-01 之前**；BioLiP 快照 **2021-12-29**。独立测试：**2020-01-01—2021-12-29**。这些日期不覆盖 ProtTrans 语言模型的预训练语料。 | §2.1：“a training set that contains proteins released before 1 January 2020”。 | [作者 bioRxiv v1 全文 §2.1](https://www.biorxiv.org/content/10.1101/2022.05.20.492769v1.full)；[正式论文](https://doi.org/10.1093/bib/bbac444) |
+| GPSite | 金属监督集沿用 LMetalSite（训练 **2020-01-01 之前**；测试 **2020-01-01—2021-12-29**）；共享多任务网络还使用其他配体训练集（2021-01-01 之前）及截至 **2021-05** 的蛋白互作数据，不能只报金属头的日期。独立非金属配体测试：2021-01-01—2023-03-29；蛋白互作按既有集划分。 | Benchmark datasets：“The benchmark datasets of metal ion”；“binding sites are directly from Yuan et al., 2022c”；“dated up to May 2021”。 | [PMC 全文：Benchmark datasets / Multi-task learning](https://pmc.ncbi.nlm.nih.gov/articles/PMC11023698/) |
+| M-Ionic | BioLiP 快照 **2022-09-27**。TestFold6 为同池留出，非时间外；Recent BioLiP 独立测试：**2022-09-27 之后至 2023-05-31**。ESM2 预训练语料另计。 | §2.1.1：“Metal-binding proteins (n = 29 404) were curated from the BioLip database”；“on 2022–09-27.” | [PMC 全文 §2.1.1—2.1.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC10792727/) |
+| ZincBindPredict | 正文描述 **2020-07** 的 ZincBindDB（未给出日，未明确另列模型冻结日）；不能把持续更新的在线库等同于该训练版本。独立测试：20:80 测试／训练划分，未给出发布日期区间。 | Introduction：“As of July 2020, there were 35,811 zinc binding sites in ZincBind, originating from 16,635 PDB structures.” | [PMC 全文 Introduction / Training](https://pmc.ncbi.nlm.nih.gov/articles/PMC7918553/) |
+| GalaxyWater-CNN | **未给出（已取得材料中未见）** PDB 快照或日期切分；尚未取得完整付费正文，不能断言全文没有日期。官方公布训练／验证／测试清单，独立测试的发布日期区间未核实。 | 摘要：“The training data are compiled from high-resolution protein crystal structures resolved together with water molecules.” | [论文](https://pubs.acs.org/doi/10.1021/acs.jcim.2c00306)；[官方代码及数据](https://github.com/seoklab/GalaxyWater-CNN)；[官方说明](https://galaxy.seoklab.org/cgi-bin/submit.cgi?type=GWCNN_INTRO) |
+| HydraProt | **未给出（已取得的 §3.1 数据集段与 README 中未见）** PDB 快照日；随机选取训练／验证蛋白，另留 **600** 个蛋白测试，未给出测试发布日期区间；完整补充材料仍待核实。 | §3.1：“Additionally, we reserved 600 proteins as a test set.” | [论文 PDF §3.1](https://pubs.acs.org/doi/pdf/10.1021/acs.jcim.3c01559)；[官方代码](https://github.com/azamanos/HydraProt)；[数据与权重](https://doi.org/10.5281/zenodo.10517963) |
+| SuperWater | **论文未给出** PDB 快照日或日期切分。独立测试：17,092 个结构中随机留出 **1,709** 个；不是时间外集，未给出发布日期区间。 | Methods：“This dataset was randomly split into training, validation, and testing sets in an 8:1:1 ratio”。 | [论文全文 Methods / Dataset curation and preprocessing](https://www.nature.com/articles/s42004-025-01789-4)；[数据](https://doi.org/10.5281/zenodo.14166655) |
+| Dowser | **无训练，无模板库**；按水—蛋白作用能搜索空腔水，能量阈值由案例支持，不存在机器学习训练截止日。独立测试时间未给出，不将 1996 年发表日当数据快照。 | 摘要：“A threshold value of the water-protein interaction energy at −12 kcal/mol was found to be able to distinguish hydrated from empty cavities.” | [原始论文](https://doi.org/10.1002/(SICI)1097-0134(199604)24:4%3C433::AID-PROT3%3E3.0.CO;2-F) |
+
+**划分结论**：对已明确给出结构数据时间边界的版本，我们取 **2024-04-30 之后（即 2024-05-01 起）首次发布的 PDB 结构**作为共同时间外候选集，以覆盖目前最晚的 PinMyMetal 2024-04 快照；若重新训练或更新模板库，我们先冻结全部训练、调参与检索数据，再把共同日期后移至所有版本实际使用的最晚发布日期之后。对截止日未知或仅有月份、库规模描述的方法，我们取得并冻结训练／模板清单，排除测试 PDB 本身，并用 MMseqs2 在 30% 序列一致性下去除训练—测试同源重叠；取不到完整清单时，我们将其单独标注为“时间泄漏未排除”，不纳入严格无泄漏的汇总结论。仅凭日期和 30% 去冗余不能保证**所有**预训练权重都无泄漏：我们还须审计 ProtTrans、ESM2、ESMFold 等上游语料／结构训练集、AlphaFold 3 的序列数据库与蒸馏数据，并冻结推理模板库；在这些边界或未知截止日未核实前，不宣称存在一个对全部对照都保证无泄漏的统一日期。
 
 ## 5. 评价指标
 
