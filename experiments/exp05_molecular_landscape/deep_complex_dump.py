@@ -12,6 +12,9 @@ Extends deep_subset.py output with what filtration-level audits need:
       valid        : certificate passed
   <sid>.complex_edges.parquet
       graph, u, v, w  (w = min_bond_distance edge weight)
+  <sid>.patch_geometry.parquet
+      patch_id, contact_count, donor_spread_angstrom, acceptor_spread_angstrom,
+      delta_angstrom, r_min_angstrom, r_max_angstrom
   <sid>.complex_manifest.json
 
 Tau for 'und' paths whose patch set was never solved under 'dir' is computed
@@ -50,18 +53,19 @@ import deep_dump                  # noqa: E402
 
 def _canon_tau(patch_map, atom_map, canon, cache, cfg_max_comb):
     key = tuple(sorted(set(canon)))
-    if key in cache:
+    if np.isfinite(cache.get(key, np.nan)):
         return cache[key]
     from gsph6.geometry import compute_patch_support
     patches = [patch_map[i] for i in key]
     res = compute_patch_support(patches, atom_map, cfg_max_comb)
-    tau = float(res.tau) if (res.certificate_passed and np.isfinite(res.tau)) else np.nan
+    tau = float(res.tau) if (res.complete and res.certificate_passed and np.isfinite(res.tau)) else np.nan
     cache[key] = tau
     return tau
 
 
 def dump_complex(res, atoms, out_dir: Path, sid: str):
     from gsph6.graph import enumerate_patch_paths
+    from experiments.union_support_audit import patch_geometry
     meta = res.get("metadata") or {}
     cfg_scales = res.get("filtration_scales") or [0.0, 0.5, 2.0]
     edges = res.get("edges") or []
@@ -139,6 +143,8 @@ def dump_complex(res, atoms, out_dir: Path, sid: str):
     pd.DataFrame([dict(canon=",".join(map(str, k)), tau=v)
                   for k, v in sorted(tau_cache.items())]
                  ).to_parquet(out_dir / f"{sid}.tau_table.parquet", index=False)
+    pd.DataFrame([patch_geometry(patch_map[pid], atom_map) for pid in patch_ids]).to_parquet(
+        out_dir / f"{sid}.patch_geometry.parquet", index=False)
 
     # P0-5 patch/chemistry audit: structural invariants of the patch layer.
     pa = patch_audit(res, atom_map)

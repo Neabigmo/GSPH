@@ -93,3 +93,30 @@ PYTHONPATH=src python -m experiments.union_support_audit
 The command reads only the committed witness galleries, path summaries,
 and discrete barcode archives. It prints per-path ratios and per-structure
 barcode flags as JSON, with no data download.
+
+For a full-structure run, use the complex exporter from
+`experiments/exp05_molecular_landscape/deep_complex_dump.py` with the
+original extraction settings. It writes `<sid>.patch_geometry.parquet`
+alongside the path and support tables. Join only exports from the same
+extraction; patch IDs are local to that extraction. Use a new output
+directory rather than overwriting archived files. The geometry table
+reports donor and acceptor spreads separately; the patch spread is
+their maximum. Cached finite values from older exporters are not proof
+that every subset support passed certification.
+
+```sh
+export PYTHONPATH=src
+python -m experiments.union_support_audit --dumps dumps --sid "$sid" \
+  --graph dir --check-archive-counts --path-output "$sid.path_metrics.parquet"
+python -m experiments.exp03_filtration_comparison.compare_exact \
+  --dir dumps --sid "$sid" --graph dir --out "$sid.barcodes.json"
+```
+
+`--check-archive-counts` rejects mismatches in the path counts per order;
+it does not establish that the original paths were reproduced. Match the
+input provenance and extraction configuration as well. The per-path
+output contains both certified supports in Å, the spread, radius extrema,
+and the bound ratio. The summary reports correlation and lists
+positive-gap single-contact paths only for paths with at least three
+distinct patches. Its zero strict four-patch excess for families of at
+most four patches follows from the path size, not a numerical test.

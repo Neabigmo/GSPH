@@ -478,10 +478,10 @@ def extract_gsph6_atoms(atoms: Sequence[Atom], scenario: str = "unknown", chain_
             "path_eta": {"3": eta3_map, "4": eta4_map},
             # Serialization-only additions for downstream filtration audits:
             # directed transfer edges (u, v, min_bond_distance) and every
-            # certified/incomplete patch-SET support actually solved.
+            # patch-SET support actually solved (None if not certified).
             "edges": [[int(u), int(v), float(w)] for u, v, w in edges],
             "support_by_set": {tuple(int(x) for x in k):
-                               (float(v.tau) if np.isfinite(getattr(v, "tau", np.nan)) else None)
+                               (float(v.tau) if _valid_support(v) else None)
                                for k, v in {**subset_birth_cache,
                                             **support_by_set}.items()}}
 

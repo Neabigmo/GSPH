@@ -38,6 +38,8 @@ def load_births(directory: Path, structure: str, graph: str):
                 raise ValueError(f"{structure}: missing certified support for {key}")
             values.append(float(value))
         common[path] = float(row.tau)
+        if not isfinite(common[path]):
+            raise ValueError(f"{structure}: nonfinite common support for {row.path}")
         pairwise[path] = max(values)
     return common, pairwise
 

@@ -40,7 +40,7 @@ def dump_rna_example(structure: Path, directory: Path, settings: dict):
 
     canons = {path: tuple(sorted(set(path))) for path in paths}
     required_pairs = {pair for canon in canons.values() for pair in combinations(canon, 2)}
-    missing_pairs = sorted(required_pairs - supports.keys())
+    missing_pairs = sorted(pair for pair in required_pairs if supports.get(pair) is None)
     patches = {p.patch_id: p for p in result["patches"]}
     atom_map = {a.index: a for a in atoms}
     support_cache, pair_cache = {}, {}
