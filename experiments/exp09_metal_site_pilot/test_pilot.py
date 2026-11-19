@@ -9,6 +9,16 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from geometry import UnionSolver, cliques, pair_support, weighted_support
 from run import clustered_count, config_hash, crop_region, download, pair_graph, read_structure, release_is_test, reusable_result
+from run import selected_records
+
+
+def test_summary_ignores_historical_results(tmp_path):
+    assert selected_records(tmp_path, {"zn": {"current"}}) == []
+    rows = [{"cohort": "zn", "pdb_id": "current"}, {"cohort": "zn", "pdb_id": "old"},
+            {"cohort": "water", "pdb_id": "current"}]
+    for index, row in enumerate(rows):
+        (tmp_path / f"{index}.json").write_text(json.dumps(row))
+    assert selected_records(tmp_path, {"zn": {"current"}}) == rows[:1]
 
 
 def test_resume_requires_matching_config(tmp_path):

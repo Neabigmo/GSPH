@@ -460,9 +460,23 @@ def execute(args, cfg):
             future.result()
 
 
+def current_samples():
+    samples = {}
+    for cohort in ("zn", "water", "mg"):
+        with (HERE / f"{cohort}_ids.csv").open() as handle:
+            samples[cohort] = {row["pdb_id"] for row in csv.DictReader(handle)}
+    return samples
+
+
+def selected_records(directory, samples):
+    records = [json.loads(p.read_text()) for p in sorted(directory.glob("*.json"))]
+    return [r for r in records if r["pdb_id"] in samples.get(r["cohort"], set())]
+
+
 def summarize(args, cfg):
     dates = annotate_dates(args.data)
-    records = [json.loads(p.read_text()) for p in sorted((args.data / "structures").glob("*.json"))]
+    samples = current_samples()
+    records = selected_records(args.data / "structures", samples)
     for record in records:
         record["initial_release_date"] = dates[record["pdb_id"]]
         record["time_split_test"] = release_is_test(dates[record["pdb_id"]])
@@ -507,7 +521,7 @@ def summarize(args, cfg):
         candidate_times = [c["seconds"] for r in complete for c in r["candidates"]]
         projected = sum(m["candidate_seconds"] * m["pairwise_passing"] / m["sampled"]
                         for r in complete for m in r["metrics"] if m["sampled"])
-        measurements[cohort] = {"selected": len(json.loads((args.data / "selection.json").read_text())["samples"][cohort]),
+        measurements[cohort] = {"selected": len(samples[cohort]),
             "attempted": len(rows), "complete": len(complete), "statuses": dict((status, sum(r["status"] == status for r in rows)) for status in sorted({r["status"] for r in rows})),
             "sampled_structures": sum(bool(r.get("candidate_sampled")) for r in complete),
             "wall_median_p90_max_seconds": np.quantile(times, [.5, .9, 1.]).tolist() if times else None,
@@ -534,7 +548,7 @@ def summarize(args, cfg):
     measurements["downloads"] = {"bytes": sum(r["bytes"] for r in ledger), "complete_files": sum(r["status"] == "complete" for r in ledger),
                                  "search_json_disk_bytes": sum(p.stat().st_size for p in args.data.glob("search_*.json"))}
     measurements["solver_crosscheck"] = json.loads((args.data / "crosscheck.json").read_text())
-    regional = [json.loads(p.read_text()) for p in sorted((args.data / "regional").glob("*.json"))]
+    regional = selected_records(args.data / "regional", samples)
     regional_rows = []
     for record in regional:
         for metric in record.get("metrics", []):
