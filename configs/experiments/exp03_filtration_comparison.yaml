@@ -7,3 +7,6 @@ scales_fine: [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
 birth_rules: [cs, pairwise, facetmax, edge, shuffled]
 bootstrap: {unit: target_cluster, n: 2000}
 outputs: [path_births.parquet, barcode_comparison.parquet, filtration_summary.csv, target_bootstrap.csv, chain_map_audit.json]
+rna_molecular_controls:
+  event_filter: {fraction: 0.25, per_nt_quota: 8}
+  geometry: {intra_min_bond_sep: 4, contact_min_vdw_ratio: 0.6}

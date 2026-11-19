@@ -8,25 +8,28 @@ from pathlib import Path
 from time import perf_counter
 
 import pandas as pd
+import yaml
 
 from cspph.core.engine import GSPH6Config
 from cspph.geometry.patch_support import compute_patch_support
 from tasks.rna.intramolecular import extract_intra, parse_structure
 from tasks.rna.sparse import rna_event_filter
 
+_CONFIG = Path(__file__).resolve().parents[2] / "configs/experiments/exp03_filtration_comparison.yaml"
+
 
 def _key(path):
     return ",".join(map(str, path))
 
 
-def dump_rna_example(structure: Path, directory: Path):
+def dump_rna_example(structure: Path, directory: Path, settings: dict):
     start = perf_counter()
     atoms = parse_structure(structure)
-    select_events, _ = rna_event_filter(atoms, fraction=0.25, per_nt_quota=8)
+    select_events, _ = rna_event_filter(atoms, **settings["event_filter"])
     result = extract_intra(
         atoms, "rna_quality_sparse",
-        config=GSPH6Config(interaction_backend="cpu", intra_min_bond_sep=4,
-                           contact_min_vdw_ratio=0.6, use_cpp_path=False),
+        config=GSPH6Config(interaction_backend="cpu", use_cpp_path=False,
+                           **settings["geometry"]),
         event_filter=select_events,
     )
     meta = result["metadata"]
@@ -67,8 +70,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("structure", type=Path, help="RNA coordinate file (first model)")
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--config", type=Path, default=_CONFIG)
     args = parser.parse_args()
-    print(json.dumps(dump_rna_example(args.structure, args.out_dir), allow_nan=False))
+    settings = yaml.safe_load(args.config.read_text(encoding="utf-8"))["rna_molecular_controls"]
+    print(json.dumps(dump_rna_example(args.structure, args.out_dir, settings), allow_nan=False))
 
 
 if __name__ == "__main__":

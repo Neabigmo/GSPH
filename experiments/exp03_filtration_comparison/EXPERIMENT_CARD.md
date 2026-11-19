@@ -39,7 +39,8 @@ same directed graph is used for both rules per model. To keep extraction
 small, target 25% of upstream contact events with a per-nucleotide
 quota of eight. There is no path or scale cap on
 the resulting graph. These are molecular controls, not members of the
-16-structure audit cohort. Coordinate parsing needs Biopython.
+16-structure audit cohort. Coordinate parsing needs Biopython. The thresholds
+are set in the [experiment configuration](../../configs/experiments/exp03_filtration_comparison.yaml).
 
 | RNA model | Paths | Union of Å birth values | H1 bars, common / pairwise | H2 bars, common / pairwise | Export wall time / peak RSS | Reduction time |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -56,6 +57,7 @@ the diagonal. These two controls establish a difference on their graphs
 but do not establish its prevalence or predictive value.
 
 ```sh
+export PYTHONPATH=src
 mkdir -p dumps
 for id in 1A9L 1A60; do
   curl -fsSL "https://files.rcsb.org/download/$id.pdb" -o "dumps/$id.pdb"
