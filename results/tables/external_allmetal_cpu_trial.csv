@@ -1,0 +1,2 @@
+method,pdb_id,threads,timeout_seconds,seconds,status,n_completed_predictions
+AllMetal3D,12um,8,900,900.0378281839994,timeout_900s,0

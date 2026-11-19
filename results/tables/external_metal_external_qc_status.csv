@@ -1,0 +1,5 @@
+condition,source_url,attempt_scope,response,verified,limitation
+MetalPDB_MFS_mapping,"https://metalpdb.cerm.unifi.it/api?query=pdb:<id>,metal:Zn",all_32_Zn_structures,HTTP_200_empty_JSON_array,false,no_site_mappings_returned; see per-structure API audit
+BioLiP2_biological_relevance,https://zhanggroup.org/BioLiP2/,service_landing,HTTP_403,false,biological_relevance_not_cross_validated
+CheckMyMetal_valence_vecsum_geometry,https://cmm.minorlab.org/,12UM_ID_submission,HTTP_500,false,official_form_submission_failed; no_other_jobs_submitted
+missing_entire_coordination_shell_residue,mmCIF_missing_residue_annotations,all_32_Zn_structures,not_spatially_resolvable_from_unmodelled_coordinates,false,incomplete_modelled_ligand_residues_checked_but_absent_entire_residue_cannot_be_located
