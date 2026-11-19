@@ -479,20 +479,24 @@ def current_samples():
     return samples
 
 
-def selected_records(directory, samples):
+def selected_records(directory, samples, cfg):
     records = [json.loads(p.read_text()) for p in sorted(directory.glob("*.json"))]
-    return [r for r in records if r["pdb_id"] in samples.get(r["cohort"], set())]
+    selected = [r for r in records if r["pdb_id"] in samples.get(r["cohort"], set())]
+    matching = [r for r in selected if r.get("config_hash") == config_hash(cfg, r.get("region_radius_A", 0.))]
+    print(f"{directory.name}: skipped {len(selected) - len(matching)} results with missing/mismatched config fingerprints",
+          file=sys.stderr)
+    return matching
 
 
 def summarize(args, cfg):
     match_near, match_far = cfg["site_match_distances"]
     dates = annotate_dates(args.data, cfg)
     samples = current_samples()
-    records = selected_records(args.data / "structures", samples)
+    records = selected_records(args.data / "structures", samples, cfg)
     for record in records:
         record["initial_release_date"] = dates[record["pdb_id"]]
         record["time_split_test"] = release_is_test(dates[record["pdb_id"]], cfg)
-    per_structure = [{k: v for k, v in row.items() if k not in {"metrics", "sites", "candidates", "error"}} for row in records]
+    per_structure = [{k: v for k, v in row.items() if k not in {"metrics", "sites", "candidates", "error", "config_hash"}} for row in records]
     write_csv(ROOT / "results/tables/exp09_metal_site_pilot_per_structure.csv", per_structure)
     site_rows = [{"cohort": r["cohort"], "pdb_id": r["pdb_id"], **site} for r in records for site in r.get("sites", [])]
     write_csv(ROOT / "results/tables/exp09_metal_site_pilot_sites.csv", site_rows)
@@ -560,7 +564,7 @@ def summarize(args, cfg):
     measurements["downloads"] = {"bytes": sum(r["bytes"] for r in ledger), "complete_files": sum(r["status"] == "complete" for r in ledger),
                                  "search_json_disk_bytes": sum(p.stat().st_size for p in args.data.glob("search_*.json"))}
     measurements["solver_crosscheck"] = json.loads((args.data / "crosscheck.json").read_text())
-    regional = selected_records(args.data / "regional", samples)
+    regional = selected_records(args.data / "regional", samples, cfg)
     regional_rows = []
     for record in regional:
         for metric in record.get("metrics", []):
