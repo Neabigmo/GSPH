@@ -1,0 +1,184 @@
+{
+  "di": [
+    {
+      "target": "1Z43",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9951381573616402,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3A3A",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.84587958836399,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3IVN",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9936796045701323,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3L0U",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9910866218296734,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3LA5",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9970828944169841,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3RKF",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.9980836236933798,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "3SKI",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.995296167247387,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "4AOB",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.9698606271777006,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "4FEN",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.9980836236933798,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "5D5L",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.9587108013937284,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "5FJC",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9907624989871162,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "5SWD",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9113524025605705,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "6C27",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9696945142208898,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "6E8S",
+      "status": "ok",
+      "n_pairs": 36,
+      "n_rmsd": 36,
+      "n_di": 36,
+      "rmsd_di_spearman": 0.9443872296601442,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "6JQ6",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.8029616724738677,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "6TFE",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.992857142857143,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "6VMY",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.8163763066202093,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "7D82",
+      "status": "ok",
+      "n_pairs": 43,
+      "n_rmsd": 43,
+      "n_di": 43,
+      "rmsd_di_spearman": 0.9770462096043492,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "7K16",
+      "status": "ok",
+      "n_pairs": 42,
+      "n_rmsd": 42,
+      "n_di": 42,
+      "rmsd_di_spearman": 0.9559192934122034,
+      "evidence": "DI lower agrees with RMSD lower"
+    },
+    {
+      "target": "7KJU",
+      "status": "ok",
+      "n_pairs": 41,
+      "n_rmsd": 41,
+      "n_di": 41,
+      "rmsd_di_spearman": 0.7048780487804879,
+      "evidence": "DI lower agrees with RMSD lower"
+    }
+  ]
+}
