@@ -36,6 +36,9 @@ for _e in sorted((_R / "experiments").glob("exp*")):
     if _e.is_dir() and str(_e) not in _sys.path:
         _sys.path.insert(0, str(_e))
 import argparse, json, sys, time, traceback
+import csv
+import hashlib
+import os
 from itertools import combinations
 from pathlib import Path
 
@@ -205,6 +208,40 @@ def patch_audit(res, atom_map):
                 dist_mean=float(np.nanmean(dists)))
 
 
+def fixed_units(task, root, manifest):
+    with Path(manifest).open() as handle:
+        rows = [row for row in csv.DictReader(handle, delimiter='\t') if row['task'] == task]
+    ids = [row['structure_id'] for row in rows]
+    if not ids or len(ids) != len(set(ids)):
+        raise ValueError(f'{task}: fixed manifest must have nonempty, unique structure IDs')
+    if task == 'rna':
+        import rna_quality_driver as driver
+        label = 'label_rmsd_official'
+    else:
+        import pd_ftdmp_driver as driver
+        label = 'label_cadscore'
+    candidates = {}
+    for unit in driver.enumerate_units(Path(root)):
+        sid = unit['structure_id']
+        if sid not in ids or (task == 'pd' and not unit.get('bound_protocol')):
+            continue
+        if sid in candidates:
+            raise ValueError(f'{sid}: ambiguous fixed input')
+        candidates[sid] = unit
+    selected = []
+    for row in rows:
+        sid = row['structure_id']
+        unit = candidates.get(sid)
+        if unit is None:
+            raise ValueError(f'{sid}: fixed PDB missing from {root}')
+        if unit['group'].upper() != row['group'].upper():
+            raise ValueError(f'{sid}: fixed target group mismatch')
+        if unit.get(label) is None or not np.isfinite(unit[label]):
+            raise ValueError(f'{sid}: missing finite {label}; copy official target label file')
+        selected.append(unit)
+    return selected
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--task", choices=["rna", "pd"], required=True)
@@ -214,20 +251,22 @@ def main():
     ap.add_argument("--n-per", type=int, default=2)
     ap.add_argument("--shard", type=int, default=0)
     ap.add_argument("--n-shards", type=int, default=1)
+    ap.add_argument("--fixed-ids", type=Path, help="TSV with task/group/structure_id; bypasses all selection")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
+    if a.n_shards < 1 or not 0 <= a.shard < a.n_shards:
+        ap.error('Require 0 <= shard < n-shards')
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     if a.task == "rna":
-        units = DS.pick_rna(Path(a.pm_root), a.n_targets, a.n_per)
-        runner = DS.run_rna
+        units = fixed_units('rna', a.pm_root, a.fixed_ids) if a.fixed_ids else DS.pick_rna(Path(a.pm_root), a.n_targets, a.n_per)
     else:
-        units = DS.pick_pd(Path(a.ftdmp_root), a.n_targets, a.n_per)
-        runner = DS.run_pd
+        units = fixed_units('pd', a.ftdmp_root, a.fixed_ids) if a.fixed_ids else DS.pick_pd(Path(a.ftdmp_root), a.n_targets, a.n_per)
     units = units[a.shard::a.n_shards]
     print(f"[complex] {len(units)} structures shard {a.shard}/{a.n_shards} -> {out}", flush=True)
     from gsph6.engine import GSPH6Config
     cfg = GSPH6Config(interaction_backend="auto", max_path_order=3,
                       compute_eta=True, hodge_dense_max_dimension=384)
+    failures = 0
     for u in units:
         sid = u["structure_id"]; t0 = time.time()
         try:
@@ -245,13 +284,21 @@ def main():
                 from gsph6.engine import extract_gsph6_atoms
                 res = extract_gsph6_atoms(list(atoms), scenario="protein_dna", config=cfg)
             m = dump_complex(res, list(atoms), out, sid)
+            m.update(input_sha256=hashlib.sha256(Path(u['path']).read_bytes()).hexdigest(),
+                     fixed_ids_sha256=hashlib.sha256(a.fixed_ids.read_bytes()).hexdigest() if a.fixed_ids else None,
+                     task=a.task, group=u['group'],
+                     rna_clash_ratio=os.environ.get('GSPH_H3_CLASH_RATIO', '0.6') if a.task == 'rna' else None)
+            (out / f'{sid}.complex_manifest.json').write_text(json.dumps(m, indent=2))
             print(f"[complex] {sid} ok {time.time()-t0:.0f}s "
                   f"dir={m['n_dir_paths']} und={m['n_und_paths']} "
                   f"sets={m['n_canon_solved']}", flush=True)
         except Exception as e:
+            failures += 1
             print(f"[complex] {sid} ERROR {type(e).__name__}: {e}", flush=True)
             (out / f"{sid}.complex_error.txt").write_text(traceback.format_exc())
     print("[complex] done", flush=True)
+    if failures:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

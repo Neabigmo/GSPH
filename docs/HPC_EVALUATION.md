@@ -1,7 +1,7 @@
 # Offline CPU evaluation
 
 The login node stages data and downloads; compute jobs never download. Unpack a
-branch archive into a fresh code directory before submission. The three scripts
+branch archive into a fresh code directory before submission. The scripts
 in `scripts/slurm/` use `CODE_DIR`, `PYTHON` (default
 `$HOME/gsph_paper/env/bin/python`) and `OUT_DIR`; select the partition at `sbatch`
 time. Set `PYTHONPATH` to `src` and the repository root for direct module commands.
@@ -44,6 +44,21 @@ only `rank_params.n_jobs` to the allocation. That effective file is hashed by th
 runner; quantiles, Tier-1-only pair definitions, CV and all ten seeds are unchanged.
 
 ## Full union-support and Å barcode audit
+
+Legacy complex dumps without patch geometry cannot recover endpoint spreads or
+per-patch radius extremes: path/support/edge tables contain scalar births and
+graph weights, and patch_audit contains structure-wide statistics, not atomic
+coordinates and endpoint membership. Re-extract the original PDBs; do not infer
+zero spread or substitute the archived witness subset. The fixed cohort is in
+`manifests/union_audit_structures.tsv`, checked against the archived census.
+`deep_complex_dump --fixed-ids <manifest>` bypasses all target/decoy selection and
+requires unique PDBs and finite official labels. It records PDB/manifest hashes
+and the RNA clash setting, and fails if an extraction fails. Stage only the 16
+PDBs with the usual PD `Bound_docking/<target>/relaxed_top_complexes` and RNA
+`PM_decoy_set/<target>` layouts, plus official per-target label files.
+`scripts/slurm/union_redump.sh` takes `STRUCTURE_ROOT` and `OUT_DIR`, re-exports
+both tasks with RNA clash ratio 0.6, then runs the full cohort audit in the same
+offline job. It preserves the legacy dumps and writes new dumps below `OUT_DIR`.
 
 ```bash
 python -m experiments.union_audit_batch --dumps "$PD_DUMPS" "$RNA_DUMPS" \
