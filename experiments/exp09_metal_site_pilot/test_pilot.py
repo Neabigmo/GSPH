@@ -8,7 +8,25 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from geometry import UnionSolver, cliques, pair_support, weighted_support
-from run import clustered_count, crop_region, download, pair_graph, read_structure, release_is_test
+from run import clustered_count, config_hash, crop_region, download, pair_graph, read_structure, release_is_test, reusable_result
+
+
+def test_resume_requires_matching_config(tmp_path):
+    path = tmp_path / "result.json"
+    cfg = {"seed": 0, "delta": .3, "radii": {"O": 2.09}}
+    fingerprint = config_hash(cfg)
+    assert reusable_result(path, fingerprint) is None
+    for row in ({"status": "complete"}, {"status": "download_missing", "config_hash": fingerprint},
+                {"status": "error", "config_hash": fingerprint}):
+        path.write_text(json.dumps(row))
+        assert reusable_result(path, fingerprint) is None
+    row = {"status": "complete", "config_hash": fingerprint}
+    path.write_text(json.dumps(row))
+    assert reusable_result(path, fingerprint) == row
+    assert reusable_result(path, config_hash({**cfg, "seed": 1})) is None
+    assert config_hash(cfg, 15.) != fingerprint
+    path.write_text("invalid")
+    assert reusable_result(path, fingerprint) is None
 
 
 def test_release_split_boundary():

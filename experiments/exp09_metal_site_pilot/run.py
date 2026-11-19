@@ -49,6 +49,23 @@ def stable_seed(identifier):
     return int.from_bytes(hashlib.sha256(identifier.encode()).digest()[:8], "little")
 
 
+def config_hash(cfg, region_radius=0.):
+    payload = {"config": cfg, "region_radius": region_radius}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def reusable_result(path, fingerprint):
+    if not path.exists():
+        return None
+    try:
+        row = json.loads(path.read_text())
+    except (ValueError, OSError):
+        return None
+    if row.get("config_hash") == fingerprint and row.get("status") not in {"download_missing", "worker_error", "error"}:
+        return row
+    return None
+
+
 def release_is_test(value):
     return date.fromisoformat(value) >= date(2024, 5, 1)
 
@@ -383,7 +400,8 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
 
 def worker(args, cfg):
     started = time.perf_counter()
-    result = {"pdb_id": args.pdb_id, "cohort": args.cohort, "status": "error"}
+    result = {"pdb_id": args.pdb_id, "cohort": args.cohort, "status": "error",
+              "config_hash": config_hash(cfg, args.region_radius)}
     def timeout(signum, frame):
         raise TimeoutError("structure wall budget exhausted")
     signal.signal(signal.SIGALRM, timeout)
@@ -403,6 +421,7 @@ def worker(args, cfg):
 
 
 def execute(args, cfg):
+    download(args.data, cfg)
     selection = json.loads((args.data / "selection.json").read_text())
     jobs = [(cohort, pdb) for cohort, ids in selection["samples"].items() for pdb in ids]
     if args.limit:
@@ -412,10 +431,12 @@ def execute(args, cfg):
     def launch(job):
         cohort, pdb = job
         out = outdir / f"{cohort}_{pdb}.json"
-        if out.exists():
-            return json.loads(out.read_text())
+        fingerprint = config_hash(cfg)
+        cached = reusable_result(out, fingerprint)
+        if cached is not None:
+            return cached
         if not (args.data / f"{pdb}.cif.gz").exists():
-            row = {"cohort": cohort, "pdb_id": pdb, "status": "download_missing"}
+            row = {"cohort": cohort, "pdb_id": pdb, "status": "download_missing", "config_hash": fingerprint}
             out.write_text(json.dumps(row))
             return row
         start = time.perf_counter()
@@ -430,7 +451,7 @@ def execute(args, cfg):
             out.write_text(json.dumps(row))
         except Exception as exc:
             row = {"cohort": cohort, "pdb_id": pdb, "status": "worker_error", "error": type(exc).__name__,
-                   "wall_seconds": time.perf_counter() - start}
+                   "wall_seconds": time.perf_counter() - start, "config_hash": fingerprint}
             out.write_text(json.dumps(row))
         print(json.dumps({key: row.get(key) for key in ["cohort", "pdb_id", "status", "atoms", "patches", "pairwise_passing", "wall_seconds", "peak_rss_kib"]}), flush=True)
         return row
