@@ -12,6 +12,7 @@ export PYTHONPATH="$ROOT/src:$ROOT${PYTHONPATH:+:$PYTHONPATH}"
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 cd "$ROOT"
 status=0
+"$PYTHON" experiments/exp09_metal_site_pilot/run.py --stage crosscheck --config "$CFG" --data "$DATA" || status=$?
 "$PYTHON" experiments/exp09_metal_site_pilot/run.py --stage run --config "$CFG" --data "$DATA" || status=$?
 "$PYTHON" experiments/exp09_metal_site_pilot/run.py --stage summarize --config "$CFG" --data "$DATA" || status=$?
 exit "$status"
