@@ -10,7 +10,21 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from geometry import UnionSolver, cliques, pair_support, weighted_support
 from run import clustered_count, config_hash, crop_region, download, pair_graph, read_structure, release_is_test, reusable_result
-from run import execute, load_config, search_entries, selected_records, terminal
+from run import execute, load_config, search_entries, selected_records, site_search_radius, terminal
+
+
+def test_site_neighborhood_expands_with_partner_thresholds():
+    cfg = load_config()
+    for cohort in ("zn", "water", "mg"):
+        assert site_search_radius(cfg, cohort) == pytest.approx(3.31)
+    cfg["coordination_radii"]["zn"]["O"] = 4.
+    assert site_search_radius(cfg, "zn") > 4.5
+    cfg["ion_partner_margin"] = .8
+    assert site_search_radius(cfg, "zn") > 4.8
+    cfg["water_partner_distance"][1] = 5.
+    assert site_search_radius(cfg, "water") > 5.
+    cfg["site_neighbor_radius"] = 6.
+    assert site_search_radius(cfg, "water") > 6.
 
 
 def test_search_cache_keys_full_query(tmp_path):

@@ -203,6 +203,12 @@ def download(data, cfg):
             raise RuntimeError("Download would exceed budget; stopped")
 
 
+def site_search_radius(cfg, cohort):
+    coordination = max(cfg["coordination_radii"][cohort].values()) + cfg["ion_partner_margin"]
+    bound = max(cfg["site_neighbor_radius"], coordination, cfg["water_partner_distance"][1])
+    return float(np.nextafter(bound, np.inf))
+
+
 def read_structure(path, cohort, cfg=None):
     cfg = load_config() if cfg is None else cfg
     structure = gemmi.read_structure(str(path))
@@ -260,7 +266,7 @@ def read_structure(path, cohort, cfg=None):
     if ligand_atoms:
         tree = cKDTree(xyz[ligand_atoms])
         for center in raw_sites:
-            nearby = [ligand_atoms[i] for i in tree.query_ball_point(center, cfg["site_neighbor_radius"])]
+            nearby = [ligand_atoms[i] for i in tree.query_ball_point(center, site_search_radius(cfg, cohort))]
             low, high = cfg["water_partner_distance"]
             partners = [i for i in nearby if (low <= np.linalg.norm(xyz[i] - center) <= high if cohort == "water"
                         else np.linalg.norm(xyz[i] - center) <= radii[i] + cfg["ion_partner_margin"])]
