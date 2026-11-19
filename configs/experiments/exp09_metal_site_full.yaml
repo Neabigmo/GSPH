@@ -1,0 +1,43 @@
+experiment_id: exp09_metal_site_full
+title: Metal and water common-witness full cohort, exhaustive candidates
+seed: 0
+zn_count: 300
+water_count: 300
+mg_count: 20
+delta: 0.3
+workers: 32
+timeout_seconds: 14400
+max_atoms: 250000
+max_patches: 50000
+max_enumerated_candidates: 2000000
+sample_per_order_stratum: 1000000000
+download_limit_bytes: 1000000000
+download_reserve_bytes: 10000000
+resolution_max: {zn: 2.0, water: 1.5, mg: 3.0}
+large_rna_min_atoms: 100000
+zn_min_binding_residues: 3
+coordination_radii:
+  zn: {N: 2.03, O: 2.09, S: 2.31, other: 0.0}
+  water: {N: 2.8, O: 2.8, other: 2.8}
+  mg: {N: 2.20, O: 2.07, other: 2.07}
+ion_min_occupancy: 0.9
+water_occupancy: 1.0
+occupancy_tolerance: 0.000001
+water_partner_distance: [2.5, 3.3]
+ion_partner_margin: 0.5
+site_neighbor_radius: 3.31
+site_min_partners: {zn: 3, water: 3, mg: 2}
+min_distinct_residues: 2
+site_match_distances: [1.0, 2.0]
+clash_distance: 1.8
+clustering_threshold: 1.0
+region_clash_shell: 6.0
+candidate_orders: [3, 4]
+eta_min_patches: 2
+eta_max_patches: 8
+eta_max_alternatives: 256
+eta_positive_tolerance: 0.000001
+crosscheck_cases: 50
+crosscheck_tolerance: 0.00001
+worker_grace_seconds: 30
+time_split_date: '2024-05-01'
