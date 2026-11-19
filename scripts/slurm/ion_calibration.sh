@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=ion-calibration
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
+#SBATCH --mem=24G
 #SBATCH --time=3-00:00:00
 set -uo pipefail
 ROOT=${CODE_DIR:-${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}}

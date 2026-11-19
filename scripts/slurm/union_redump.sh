@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=union-redump
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=100G
+#SBATCH --cpus-per-task=24
+#SBATCH --mem=90G
 #SBATCH --time=3-00:00:00
 set -uo pipefail
 ROOT=${CODE_DIR:-${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}}
