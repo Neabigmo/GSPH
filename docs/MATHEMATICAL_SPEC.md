@@ -32,6 +32,9 @@
    (EXP-04, 1,600 tests / 0 violations).
 3. Rigid-motion invariance to ~1e-13 Å.
 4. Helly-type feasibility certificate for <=4 active constraints in 3D.
+5. Selection–Helly formula, union counterexample, affine Jung bound and
+   pairwise interleaving: see `docs/THEORY_UNION_SUPPORT.md`. "Determined by
+   at most four patches" holds only for single-contact patches.
 
 ## Numerical conventions
 
