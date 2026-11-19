@@ -5,7 +5,7 @@
 ## 候选池与数据来源
 
 - 候选池：`results/tables/ftdmp_candidates.csv`，即本方法实际使用的候选，共 18,799 个（bound 47 靶标 × 200 个；unbound 47 靶标，共 9,399 个）。
-  - unbound 的 1BDT 只有 199 个，缺 `1BDT_ftd161s0d690072p4p56p25p63p144p345`。FTDMP 官方包和 VoroMQA 分数里都有这个候选，但它不在本方法的候选池中，所以不进入计算。
+  - unbound 的 1BDT 只有 199 个，缺 `1BDT_ftd161s0d690072p4p56p25p63p144p345`。FTDMP 官方包和 VoroMQA 分数里都有这个候选，但它不在本方法的候选池中，所以不进入计算。超算会话核对后确认，本方法的特征表本身就少这一条，很可能是当时特征提取失败或被排除了；不是后来新加的，也不是用来做隔离验证的。
 - VoroMQA：`results/tables/pd_voromqa_scores.jsonl`，共 18,800 条，没有缺失值。
   - 由仓库脚本 `experiments/baselines_ext/score_pd_voromqa.py` 调用 `voronota-voromqa -i` 生成，原始计算时没有记录程序版本。
   - 2026-11-19 用 Voronota 官方发布版 v1.29.4816 从源码编译，随机抽 20 个候选，加上 1BDT 那一个，共 21 个重新计算。VoroMQA 分数、残基数、原子数全部逐位一致。

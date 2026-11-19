@@ -49,7 +49,7 @@ networkx==3.4.2
 numpy==1.26.4
 orjson==3.13.0
 packaging==26.3
-pandas==2.3.3
+pandas==2.2.3
 pillow==10.4.0
 py3Dmol==2.5.5
 pydantic==2.6.3

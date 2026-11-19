@@ -31,15 +31,17 @@
      bash experiments/external_metal_site_run/setup_env.sh
    ```
    - 依赖版本固定在 `constraints.txt` 中，torch 用 2.5.1 的 CPU 版。
-   - 如果 moleculekit 编译失败，可先在 conda 环境里运行 `conda install -c acellera moleculekit=1.9.4`，再用该环境作为 `BASE_PYTHON`。
-2. **提交作业数组。** 一个结构一个任务，每个任务 8 核、16 GB 内存上限、最长 1 天，batch 默认为 8。两种方法各提交一次；分区在提交时用 `-p` 指定。
+   - 有 conda（或 micromamba）时，脚本先用 conda 建 Python 3.10 环境，装好 numpy 1.26.4、pandas 2.2.3、scipy 1.12.0 的预编译包。可以用 `CONDA_CHANNEL=https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge` 走清华镜像。
+   - 其余编译型依赖只装 manylinux2014 预编译包（glibc 2.17 就能用），不会退回到源码编译。只有纯 Python 的 halo 和带小型 C 扩展的 moleculekit 从源码安装，gcc 7.3 就能编译。
+   - 脚本设置了 `PYTHONNOUSERSITE=1`，避免读到 `~/.local` 里的旧包。
+2. **提交作业数组。** 一个结构一个任务，每个任务 16 核、32 GB 内存上限、最长 12 小时，32 个结构同时排队，batch 默认为 8。两种方法各提交一次；分区在提交时用 `-p` 指定。
    ```bash
    export PYTHON=<新环境目录>/bin/python TOOLS=<新工具目录> OUT_DIR=<仓库外的输出目录>
    sbatch -p <分区> --export=ALL,METHOD=metal3d scripts/slurm/external_metal.sh
    sbatch -p <分区> --export=ALL,METHOD=allmetal3d scripts/slurm/external_metal.sh
    ```
    - 建议先用 `--array=0-1` 校准耗时和峰值内存。每个任务会把峰值内存（`peak_rss_mb`）写进结果。
-   - 若某个任务超内存，用 `BATCH_SIZE=2` 重提这一个下标即可。
+   - 若某个任务超内存，用 `BATCH_SIZE=2` 重提这一个下标即可。如果队列核数充足，可以用 `sbatch -c 32 --mem=48G` 进一步加速；进程数会自动跟随分配的核数。
 3. **汇总。** 全部任务结束后在登录节点运行：
    ```bash
    $PYTHON experiments/external_metal_site_run/run.py --collect --out $OUT_DIR
