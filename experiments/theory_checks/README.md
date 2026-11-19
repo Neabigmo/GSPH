@@ -1,10 +1,17 @@
 # Union-support numerical checks
 
-Run from the repository root with the project's NumPy/SciPy environment:
+Run from the repository root with the project's NumPy/SciPy/PyYAML environment:
 
 ```sh
 python experiments/theory_checks/check_union_support_bounds.py
 ```
+
+Parameters live in `configs/experiments/theory_checks.yaml`, the default config
+resolved relative to the repository. To use another YAML file, pass
+`--config configs/experiments/theory_checks.yaml`. This controls the seed,
+sample count, tolerance, box size, element/radius set, patch/contact count
+ranges (inclusive), solver comparison count, and analytic example dimensions.
+Radii for the configured elements are read from the repository's vdW table.
 
 The fixed-seed script checks 2,000 random families (3–5 patches, independently
 1–3 contacts each, independent coordinates in a 10 angstrom cube), prints a

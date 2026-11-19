@@ -1,0 +1,10 @@
+seed: 20260709
+sample_count: 2000
+tolerance: 1.0e-6
+box_size: 10
+elements: [O, N, C, S]
+patch_count: [3, 5]
+contacts_per_patch: [1, 3]
+solver_comparisons: 3
+example_radius: 1.6
+hollow_side: 8

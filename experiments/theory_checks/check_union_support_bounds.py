@@ -1,4 +1,5 @@
 """Reproducible numerical checks for support of unions of contact lenses."""
+import argparse
 from itertools import combinations, product
 import json
 from pathlib import Path
@@ -6,6 +7,7 @@ import sys
 from types import SimpleNamespace
 
 import numpy as np
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
@@ -13,9 +15,6 @@ from cspph.core.gsph1 import VDW_RADII, _active_set_support, _support_certificat
 from cspph.geometry.patch_support import _atom_support, compute_patch_support
 
 
-TOL = 1e-6
-SEED = 20260709
-COUNT = 2000
 JUNG = np.sqrt(1.5)
 
 
@@ -84,64 +83,74 @@ def tetrahedron(side):
 
 
 def main():
-    rng = np.random.default_rng(SEED)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path, default=Path(__file__).resolve().parents[2]
+                        / "configs/experiments/theory_checks.yaml")
+    args = parser.parse_args()
+    with args.config.open() as handle:
+        config = yaml.safe_load(handle)
+    seed = int(config["seed"])
+    count = int(config["sample_count"])
+    tol = float(config["tolerance"])
+    rng = np.random.default_rng(seed)
     violations = [0, 0]
     worst_gap = float("inf")
     max_ratio = -float("inf")
     witness = None
     comparisons = 0
-    for index in range(COUNT):
+    for index in range(count):
         patches = []
         size = 0
-        for _ in range(int(rng.integers(3, 6))):
-            contacts = int(rng.integers(1, 4))
+        for _ in range(int(rng.integers(config["patch_count"][0], config["patch_count"][1] + 1))):
+            contacts = int(rng.integers(config["contacts_per_patch"][0], config["contacts_per_patch"][1] + 1))
             patches.append([(size + 2 * j, size + 2 * j + 1) for j in range(contacts)])
             size += 2 * contacts
-        centers = rng.uniform(0, 10, (size, 3))
-        elements = rng.choice(["O", "N", "C", "S"], size=size)
+        centers = rng.uniform(0, config["box_size"], (size, 3))
+        elements = rng.choice(config["elements"], size=size)
         radii = np.array([VDW_RADII[e] for e in elements])
         tau, pair, _, atoms = evaluator(patches, centers, radii, elements)
         delta = spread(patches, centers)
         ratio = (radii.min() + tau) / (radii.max() + pair + delta)
         worst_gap = min(worst_gap, tau - pair)
-        violations[0] += int(tau + TOL < pair)
-        violations[1] += int(radii.min() + tau > JUNG * (radii.max() + pair + delta) + TOL)
+        violations[0] += int(tau + tol < pair)
+        violations[1] += int(radii.min() + tau > JUNG * (radii.max() + pair + delta) + tol)
         if ratio > max_ratio:
             max_ratio = ratio
             witness = dict(index=index, patches=patches, centers=centers.tolist(),
                            elements=elements.tolist(), tau=tau, tau_pw=pair, delta=delta,
                            r_min=float(radii.min()), r_max=float(radii.max()), ratio=ratio)
-        if index < 3:
+        if index < config["solver_comparisons"]:
             objects = [SimpleNamespace(patch_id=i, contacts=[
                 SimpleNamespace(donor=d, acceptor=a, distance=float(np.linalg.norm(centers[d] - centers[a])),
                                 tau=0.0) for d, a in patch], minimum_tau=0.0)
                 for i, patch in enumerate(patches)]
             result = compute_patch_support(objects, atoms)
-            if not result.complete or not result.certificate_passed or abs(result.tau - tau) > TOL:
+            if not result.complete or not result.certificate_passed or abs(result.tau - tau) > tol:
                 raise RuntimeError("enumeration differs from compute_patch_support")
             comparisons += 1
 
     rows = [
-        ("Monotonicity", violations[0] == 0, f"n={COUNT}; failures={violations[0]}; min(tau-tau_pw)={worst_gap:.9f}"),
-        ("Affine Jung", violations[1] == 0, f"n={COUNT}; failures={violations[1]}; max ratio={max_ratio:.9f}; bound={JUNG:.9f}"),
+        ("Monotonicity", violations[0] == 0, f"n={count}; failures={violations[0]}; min(tau-tau_pw)={worst_gap:.9f}"),
+        ("Affine Jung", violations[1] == 0, f"n={count}; failures={violations[1]}; max ratio={max_ratio:.9f}; bound={JUNG:.9f}"),
     ]
-    r = 1.6
+    r = float(config["example_radius"])
     vertices = tetrahedron(2 * r)
     patches = [[(i, i)] for i in range(4)]
     tau, pair, _, _ = evaluator(patches, vertices, np.full(4, r))
     expected = (JUNG - 1) * r
-    rows.append(("Convex tetrahedron", abs(pair) <= TOL and abs(tau - expected) <= TOL,
+    rows.append(("Convex tetrahedron", abs(pair) <= tol and abs(tau - expected) <= tol,
                  f"tau_pw={pair:.9f}; tau={tau:.9f}; analytic={expected:.9f}"))
-    triangle = np.array([[0, 0, 0], [8, 0, 0], [4, 4 * np.sqrt(3), 0]])
-    for name, vertices in [("Hollow triangle", triangle), ("Hollow tetrahedron", tetrahedron(8))]:
+    side = float(config["hollow_side"])
+    triangle = np.array([[0, 0, 0], [side, 0, 0], [side / 2, side / 2 * np.sqrt(3), 0]])
+    for name, vertices in [("Hollow triangle", triangle), ("Hollow tetrahedron", tetrahedron(side))]:
         n = len(vertices)
         patches = [[(j, j) for j in range(n) if j != i] for i in range(n)]
         tau, pair, support, _ = evaluator(patches, vertices, np.full(n, r))
         sub = max(support(list(family)) for family in combinations(patches, n - 1))
-        expected = 8 / 2 - r
-        rows.append((name, abs(pair) <= TOL and abs(sub) <= TOL and abs(tau - expected) <= TOL,
+        expected = side / 2 - r
+        rows.append((name, abs(pair) <= tol and abs(sub) <= tol and abs(tau - expected) <= tol,
                      f"tau_pw={pair:.9f}; max proper subfamily={sub:.9f}; tau={tau:.9f}; analytic={expected:.9f}"))
-    print(f"seed={SEED}; tolerance={TOL:g}; coordinates/radii in angstroms")
+    print(f"seed={seed}; tolerance={tol:g}; coordinates/radii in angstroms")
     print(f"Enumeration agrees with compute_patch_support on {comparisons} random families.")
     print(f"{'Check':<23} {'Result':<6} Details")
     for name, passed, detail in rows:
