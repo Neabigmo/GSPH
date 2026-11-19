@@ -25,6 +25,17 @@ go into the manuscript's Theory section. Notation follows
   diameter; `δ_P = 0` for a single-contact patch). `δ = max_i δ_{P_i}`.
 * `r_min`, `r_max`: smallest and largest radius among the atoms involved.
 
+*Relation to Čech and Rips.* `τ(P_1,…,P_k)` is the birth of the simplex
+`{P_1,…,P_k}` in the nerve of the thickened family `{S_{P_i}(t)}`, i.e. a
+Čech-type birth; `τ_pw` is the birth in the flag (Rips-type) complex of
+the same nerve. It is not, in general, the minimum-enclosing-ball radius of
+the patch atoms: `S_P(t)` is a union of lenses, so only after a selection
+`σ` (Lemma 1) does one get a weighted 1-center problem. With zero radii
+and one point per patch, `τ` is exactly the ordinary Čech filtration value
+(minimum-enclosing-ball radius) of the points. Because the `S_P(t)` are
+non-convex, no good-cover nerve theorem is claimed: the resulting barcodes
+are not asserted to describe the union of support sets.
+
 ## Lemma 1 (selection formula)
 
 `τ(P_1,…,P_k) = min_{σ} τ(V_σ)`, where `σ` ranges over selections

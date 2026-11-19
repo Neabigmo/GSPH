@@ -45,7 +45,7 @@
 
 | 方法 | 论证职责 | 代码与许可 | 依赖 | 下载 | 估计核时 | 能否重跑 |
 |---|---|---|---|---|---|---|
-| Čech / α 复形持久同调 | 定位新意：在无向点集上共同支撑等于 Čech 出生值，差别只来自有向路径复形 | GUDHI，MIT/GPL | pip | <50 MB | <1 | 能 |
+| Čech / α 复形持久同调 | 定位新意：零半径点支撑下共同支撑等于 Čech 出生值；真实 patch 上共同支撑是加厚并集支撑集族的 Čech 型神经出生值，两两支撑是其 Rips 型对应 | GUDHI，MIT/GPL | pip | <50 MB | <1 | 能 |
 | Vietoris–Rips 持久同调 | 标准两两做法会丢掉什么 | Ripser，MIT | pip | <10 MB | <1 | 能 |
 | 持久路径同调（Chowdhury–Mémoli） | 直接前身：同一复形只换出生规则 | 官方 pph-matlab（BSD-3，需 MATLAB）；Wei 组 PathHom（MIT，Python） | Python | 小 | 1–5（路径数随阶增长） | 能，用 PathHom，并与仓库的边权滤过交叉核对 |
 | 持久路径拉普拉斯 | 回应"和 Wei 组路径方法有何不同"：它的滤过仍是两两距离型 | 官方 HERMES 需 MATLAB 和 CGAL；PathHom 可能覆盖 | — | 小 | 1–5 | 能，优先用 PathHom；不行就按 Wang & Wei 2023 的定义复现并标注"复现" |
