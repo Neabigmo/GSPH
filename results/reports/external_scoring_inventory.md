@@ -2,6 +2,8 @@
 
 ## PM 全量补算：与 EXP-06 对齐
 
+**2026-11-19 补充：** lociPARSE 0.1.1 用官方权重在同一批 826 个结构上逐个打分（以 pMoL 为分数，分数越高越好），806 个 decoy 上的宏平均 Spearman 为 0.596，本方法 A7_PTH 对它的配对差为 −0.049 [−0.155, 0.056]。pMoL 只保留两位小数，所以存在并列。逐结构分数和配对结果已并入下表和 `external_scoring_pm_*` 系列 CSV。
+
 全量已取得每方法 826 个结构的能量，含 20 个 native；评估严格排除 native，主口径为 **20 靶标、806 个 decoy、官方 RMSD、逐靶标 Spearman 后宏平均**。复用了上次五靶标 210 个结构的有效分数，新增评分其余 616 个结构，没有重复跑已有分数。
 
 核对依据：`tasks/rna/rna_quality_driver.py::_labels/enumerate_units` 按文件名读取 `PM_decoy_set/RMSD/<target>.rmsd` 至 `label_rmsd_official`，以文件名等于靶标名识别 native；`experiments/exp06_scoring_ablation/run_ablation.py::TASKS/load_task/rank_metrics` 选择 `rna_clash06`、成功 audit、`kind == decoy`，标签方向取 `-RMSD`，逐靶标再平均。`results/tables/candidate_coverage.json` 保存 `raw_rows=826, audit_records=970, audit_ok=826, rows_after_audit=826, native_excluded=20, final_rows=806, groups=20`。**970 是历史 audit 记录数，不是该 EXP-06 评价池；806 是去 native 后的候选数，不是漏算 20 个结构。**目标集合与 `cv_splits_rna.json` 的 20 靶标完全相同。

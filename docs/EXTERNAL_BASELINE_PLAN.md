@@ -103,17 +103,30 @@
 5. 离子位点在时间外测集定稿后跑 Metal3D 和 PinMyMetal；AllMetal3D 交给有 GPU 的节点。
 6. 每个方法产出逐候选分数 CSV，统一评估脚本出表，写回本文档。
 
-## 6. 执行状态（按"现成能用就不重跑"收窄后）
+## 6. 执行状态（按"现成能用就不重跑"收窄后，2026-11-19 更新）
+
+正文外部对比以已对齐的几组为准：Čech/α、Rips、rsRNASP、cgRNASP、DFIRE-RNA、VoroMQA，以及离子位点的外部方法（结果待定）。
 
 | 方法 | 状态 | 结果 | 出处 |
 |---|---|---|---|
-| Čech / α、Rips | 已完成：在控制结构上计算，原归档结构做汇总 | 零半径 τ 与精确 miniball 半径的最大差为 1.1×10⁻¹⁴ Å；patch 层无向 τ 与两两支撑的条形码，RNA 有 12/24 个"结构×阶"不同，蛋白-DNA 有 2/21 个不同 | [cech_rips_compare.md](../results/reports/cech_rips_compare.md) |
+| Čech / α、Rips | 已完成：在控制结构上计算，并汇总原归档结构的已有结果 | 零半径 τ 与精确 miniball 半径的最大差为 1.1×10⁻¹⁴ Å。patch 层上，无向 τ 与两两支撑的条形码在 RNA 有 12/24 个"结构×阶"不同，在蛋白-DNA 有 2/21 个不同 | [cech_rips_compare.md](../results/reports/cech_rips_compare.md) |
 | 持久路径同调（Chowdhury–Mémoli） | 直接用仓库已有的 `edgew` 结果 | 尺度是共价步数，只作参照 | 同上 |
-| rsRNASP / cgRNASP / DFIRE-RNA | 已在 PM 全量上重跑（806 个 decoy、20 个靶标），共 8 分钟 CPU | 宏平均 Spearman 分别为 0.580 / 0.560 / 0.518；本方法 0.550，差异不显著 | [external_scoring_inventory.md](../results/reports/external_scoring_inventory.md) |
-| FTDMP 官方排序 | 已下载官方逐候选排序（每个条件 9,400 个候选） | 等本方法的候选清单到了再做同池对齐 | 同上 |
-| VoroMQA | 官方包里没有它的分数 | 等超算找到原分数文件；找不到再在子集上补跑 | 同上 |
-| Metal3D | 在 32 个合格的 Zn 时间外结构上推理中（只把设备改为 CPU） | 69 个 Zn 位点作参考，但外部质控只做了一部分 | [external_metal_site.md](../results/reports/external_metal_site.md) |
-| AllMetal3D | 移出主表：CPU 上单个小结构 15 分钟也跑不完，按成本决定不租 GPU | 补充材料引用原文数字，注明是序列隔离测试集、训练截至 2021-03-05 | — |
-| 持久路径拉普拉斯、PinMyMetal、HADDOCK3、元素特异持久同调 | 暂缓 | — | — |
-| 3dRNAscore、DDNA3、ITScore-PR、3dRPC | 需要注册账号或代码来源不明，已列给 Robin | — | — |
-| ARES | 公开的只有示例 dummy 权重 | 不进入比较 | — |
+| 持久路径拉普拉斯 | 不单独计算 | 它的调和部分在同一滤过上就是持久路径同调的 Betti 数，所以和本方法的差别全部来自滤过（出生规则）。这一差别已由 τ 与两两支撑的比较直接给出 | — |
+| rsRNASP / cgRNASP / DFIRE-RNA | 已在 PM 全量上重跑：806 个 decoy，20 个靶标 | 宏平均 Spearman 依次为 0.580 / 0.560 / 0.518；本方法为 0.550，差异不显著 | [external_scoring_inventory.md](../results/reports/external_scoring_inventory.md) |
+| lociPARSE（替代 ARES 作深度学习参照） | 已用官方程序和权重（0.1.1）在同一批 806 个 decoy 上跑完，CPU 共 27 秒 | 宏平均 Spearman 0.596；本方法 A7_PTH 对它的配对差为 −0.049 [−0.155, 0.056]。它的训练集是否包含 PM 靶标没有审计，只放补充材料 | 同上 |
+| VoroMQA | 用已有逐候选分数，抽检 21/21 复现一致（Voronota v1.29.4816） | 在 bound / unbound 上的宏平均 Spearman 为 −0.004 / −0.032，本方法明显更好 | [external_scoring_pd.md](../results/reports/external_scoring_pd.md) |
+| FTDMP 官方排序 | 已在同一个 18,799 候选池上对齐 | 在 bound 上好于本方法（配对差 −0.079），在 unbound 上本方法更好（+0.202）；它是共识排序，只作参照 | 同上 |
+| Metal3D、AllMetal3D | 超算 CPU 作业数组已准备好，等 Robin 通知后再提交；本机推理暂停 | — | [external_metal_site_run](../experiments/external_metal_site_run/README.md) |
+| PinMyMetal、HADDOCK3、元素特异持久同调 | 按成本规则不做 | — | — |
+
+## 7. 无公开可复现程序或权重的方法（查证日期 2026-11-19）
+
+以下方法不进正文对比表，也不向主人索要账号或代码；主人以后手头有这些程序时再补。
+
+| 方法 | 出处 | 查证结果 |
+|---|---|---|
+| 3dRNAscore | Wang et al., *NAR* 2015；作者网站 biophy.hust.edu.cn | 下载需要登录注册，没有公开的匿名下载 |
+| ARES | Townshend et al., *Science* 2021；作者在 Zenodo 发布的代码包 | 发布包里的 `sample_weights.ckpt` 是示例权重，不是论文用的正式权重 |
+| DDNA3 | Zhao, Yang & Zhou, *Bioinformatics* 2010 | 没有找到可下载的官方程序 |
+| ITScore-PR | Huang & Zou, *NAR* 2014 | 没有找到可下载的官方程序；蛋白-RNA 候选池也不重建 |
+| 3dRPC | Huang, Li & Xiao, *Bioinformatics* 2016 | 同上 |
