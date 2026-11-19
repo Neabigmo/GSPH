@@ -24,12 +24,14 @@ from pathlib import Path
 import gemmi
 import numpy as np
 import requests
+import yaml
 from scipy.spatial import cKDTree
 
 from geometry import UnionSolver, cliques, crosscheck, pair_support
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+DEFAULT_CONFIG = ROOT / "configs/experiments/exp09_metal_site_pilot.yaml"
 CLASSIC = {"HIS", "CYS", "ASP", "GLU"}
 ZN_GROUPS = {"ASP": ["OD1", "OD2"], "GLU": ["OE1", "OE2"], "HIS": ["ND1", "NE2"],
              "CYS": ["SG"], "MET": ["SD"], "SER": ["OG"], "THR": ["OG1"],
@@ -66,15 +68,19 @@ def reusable_result(path, fingerprint):
     return None
 
 
-def release_is_test(value):
-    return date.fromisoformat(value) >= date(2024, 5, 1)
+def load_config(path=DEFAULT_CONFIG):
+    return yaml.safe_load(path.read_text())
 
 
-def annotate_dates(data):
+def release_is_test(value, cfg=None):
+    cfg = load_config() if cfg is None else cfg
+    return date.fromisoformat(value) >= date.fromisoformat(cfg["time_split_date"])
+
+
+def annotate_dates(data, cfg):
     cache = data / "release_dates.json"
     dates = json.loads(cache.read_text()) if cache.exists() else {}
-    selection = json.loads((data / "selection.json").read_text())
-    for cohort, identifiers in selection["samples"].items():
+    for cohort in current_samples():
         path = HERE / f"{cohort}_ids.csv"
         with path.open() as handle:
             rows = list(csv.DictReader(handle))
@@ -87,7 +93,7 @@ def annotate_dates(data):
                     raise RuntimeError(f"Missing initial release date for {identifier}")
                 dates[identifier] = values[0]
             row["initial_release_date"] = dates[identifier]
-            row["time_split_test"] = release_is_test(dates[identifier])
+            row["time_split_test"] = release_is_test(dates[identifier], cfg)
         write_csv(path, rows)
     cache.write_text(json.dumps(dates, indent=2))
     return dates
@@ -120,7 +126,7 @@ def sample_ids(biolip, data, cfg):
             if len(fields) < 8 or fields[4].upper() != "ZN":
                 continue
             try:
-                good = 0 < float(fields[2]) <= 2 and len(set(fields[7].split())) >= 3
+                good = 0 < float(fields[2]) <= cfg["resolution_max"]["zn"] and len(set(fields[7].split())) >= cfg["zn_min_binding_residues"]
             except ValueError:
                 good = False
             if good:
@@ -128,16 +134,16 @@ def sample_ids(biolip, data, cfg):
     session = requests.Session()
     water_query = {"type": "group", "logical_operator": "and", "nodes": [
         terminal("exptl.method", "exact_match", "X-RAY DIFFRACTION"),
-        terminal("rcsb_entry_info.resolution_combined", "less_or_equal", 1.5),
+        terminal("rcsb_entry_info.resolution_combined", "less_or_equal", cfg["resolution_max"]["water"]),
         terminal("rcsb_entry_info.polymer_entity_count_protein", "greater", 0)]}
     mg_nodes = [terminal("exptl.method", "exact_match", "X-RAY DIFFRACTION"),
-                terminal("rcsb_entry_info.resolution_combined", "less_or_equal", 3.),
+                terminal("rcsb_entry_info.resolution_combined", "less_or_equal", cfg["resolution_max"]["mg"]),
                 terminal("rcsb_entry_info.polymer_entity_count_RNA", "greater", 0),
                 terminal("rcsb_nonpolymer_entity_container_identifiers.nonpolymer_comp_id", "exact_match", "MG")]
     water = search_entries(session, water_query, data, "water")
     mg = search_entries(session, {"type": "group", "logical_operator": "and", "nodes": mg_nodes}, data, "mg")
     large = search_entries(session, {"type": "group", "logical_operator": "and", "nodes": mg_nodes + [
-        terminal("rcsb_entry_info.deposited_atom_count", "greater_or_equal", 100000)]}, data, "large_rna")
+        terminal("rcsb_entry_info.deposited_atom_count", "greater_or_equal", cfg["large_rna_min_atoms"])]}, data, "large_rna")
     if not large:
         raise RuntimeError("No large RNA/Mg entry found")
     samples = {"zn": rng.sample(sorted(zn), min(len(zn), cfg["zn_count"])),
@@ -158,7 +164,8 @@ def download(data, cfg):
     ledger_path = data / "downloads.json"
     ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else []
     used = sum(row["bytes"] for row in ledger)
-    complete = {row["pdb_id"] for row in ledger if row["status"] == "complete"}
+    complete = {row["pdb_id"] for row in ledger if row["status"] == "complete"
+                and (data / f"{row['pdb_id']}.cif.gz").exists()}
     session = requests.Session()
     for identifier in sorted({pdb for ids in selection["samples"].values() for pdb in ids}):
         if identifier in complete:
@@ -195,7 +202,8 @@ def download(data, cfg):
             raise RuntimeError("Download would exceed budget; stopped")
 
 
-def read_structure(path, cohort):
+def read_structure(path, cohort, cfg=None):
+    cfg = load_config() if cfg is None else cfg
     structure = gemmi.read_structure(str(path))
     structure.setup_entities()
     atoms, groups, sites = [], [], []
@@ -213,7 +221,7 @@ def read_structure(path, cohort):
             if residue.name in {"ZN", "MG", "HOH", "WAT", "DOD"}:
                 expected = {"zn": "ZN", "mg": "MG", "water": "O"}[cohort]
                 for atom in chosen.values():
-                    if atom.element.name.upper() == expected and (atom.occ >= .9 if cohort != "water" else abs(atom.occ - 1) < 1e-6):
+                    if atom.element.name.upper() == expected and (atom.occ >= cfg["ion_min_occupancy"] if cohort != "water" else abs(atom.occ - cfg["water_occupancy"]) < cfg["occupancy_tolerance"]):
                         raw_sites.append(np.array([atom.pos.x, atom.pos.y, atom.pos.z]))
                 continue
             info = gemmi.find_tabulated_residue(residue.name)
@@ -245,16 +253,17 @@ def read_structure(path, cohort):
                     groups.append({"atoms": ids, "residue": rid,
                                    "classic": cohort == "zn" and role == "side" and residue.name in CLASSIC})
     xyz = np.asarray([atom["xyz"] for atom in atoms], dtype=float).reshape((-1, 3))
-    radii = np.array([({"N": 2.03, "O": 2.09, "S": 2.31}.get(a["element"], 0.) if cohort == "zn"
-                       else 2.8 if cohort == "water" else 2.20 if a["element"] == "N" else 2.07) for a in atoms])
+    coordination = cfg["coordination_radii"][cohort]
+    radii = np.array([coordination.get(a["element"], coordination["other"]) for a in atoms])
     ligand_atoms = sorted({i for group in groups for i in group["atoms"]})
     if ligand_atoms:
         tree = cKDTree(xyz[ligand_atoms])
         for center in raw_sites:
-            nearby = [ligand_atoms[i] for i in tree.query_ball_point(center, 3.31)]
-            partners = [i for i in nearby if (2.5 <= np.linalg.norm(xyz[i] - center) <= 3.3 if cohort == "water"
-                        else np.linalg.norm(xyz[i] - center) <= radii[i] + .5)]
-            if len(partners) >= (2 if cohort == "mg" else 3) and len({atoms[i]["residue"] for i in partners}) >= 2:
+            nearby = [ligand_atoms[i] for i in tree.query_ball_point(center, cfg["site_neighbor_radius"])]
+            low, high = cfg["water_partner_distance"]
+            partners = [i for i in nearby if (low <= np.linalg.norm(xyz[i] - center) <= high if cohort == "water"
+                        else np.linalg.norm(xyz[i] - center) <= radii[i] + cfg["ion_partner_margin"])]
+            if len(partners) >= cfg["site_min_partners"][cohort] and len({atoms[i]["residue"] for i in partners}) >= cfg["min_distinct_residues"]:
                 patch_ids = [g for g, group in enumerate(groups) if set(partners) & set(group["atoms"])]
                 sites.append({"center": center, "groups": patch_ids})
     return atoms, xyz, radii, groups, sites
@@ -280,7 +289,8 @@ def pair_graph(groups, xyz, radii, delta):
     return adjacency, pair_tau
 
 
-def clustered_count(points):
+def clustered_count(points, cfg=None):
+    cfg = load_config() if cfg is None else cfg
     if not points:
         return 0
     parent = list(range(len(points)))
@@ -289,19 +299,20 @@ def clustered_count(points):
             parent[i] = parent[parent[i]]
             i = parent[i]
         return i
-    for a, b in cKDTree(points).query_pairs(1.):
+    for a, b in cKDTree(points).query_pairs(cfg["clustering_threshold"]):
         parent[find(a)] = find(b)
     return len({find(i) for i in range(len(points))})
 
 
-def crop_region(atoms, xyz, radii, groups, radius, seed):
+def crop_region(atoms, xyz, radii, groups, radius, seed, cfg=None):
+    cfg = load_config() if cfg is None else cfg
     if not groups:
         raise ValueError("regional calibration requires ligand patches")
     anchor = random.Random(seed).choice(groups)["atoms"][0]
     center = xyz[anchor]
     distances = np.linalg.norm(xyz - center, axis=1)
     selected = [g for g in groups if all(distances[i] <= radius for i in g["atoms"])]
-    keep = np.flatnonzero(distances <= radius + 6.)
+    keep = np.flatnonzero(distances <= radius + cfg["region_clash_shell"])
     remap = {old: new for new, old in enumerate(keep)}
     selected = [{**g, "atoms": tuple(remap[a] for a in g["atoms"])} for g in selected]
     return [atoms[i] for i in keep], xyz[keep], radii[keep], selected, center
@@ -309,13 +320,13 @@ def crop_region(atoms, xyz, radii, groups, radius, seed):
 
 def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
     phase = time.perf_counter()
-    atoms, xyz, radii, groups, sites = read_structure(data / f"{identifier}.cif.gz", cohort)
+    atoms, xyz, radii, groups, sites = read_structure(data / f"{identifier}.cif.gz", cohort, cfg)
     if region_radius:
         if cohort != "mg":
             raise ValueError("regional calibration is separate from the main protein cohorts")
         result.update(full_atoms=len(atoms), full_patches=len(groups), region_radius_A=region_radius)
         atoms, xyz, radii, groups, center = crop_region(atoms, xyz, radii, groups, region_radius,
-                                                       stable_seed(f"{cfg['seed']}:{identifier}:region"))
+                                                       stable_seed(f"{cfg['seed']}:{identifier}:region"), cfg)
         result["region_center"] = center.tolist()
         sites = []
     result.update(atoms=len(atoms), patches=len(groups), true_sites=len(sites), parse_seconds=time.perf_counter() - phase)
@@ -328,9 +339,9 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
     phase = time.perf_counter()
     reservoirs, counts = defaultdict(list), defaultdict(int)
     rng = random.Random(stable_seed(f"{cfg['seed']}:{cohort}:{identifier}"))
-    for order in (3, 4):
+    for order in cfg["candidate_orders"]:
         for candidate in cliques(adjacency, order):
-            if len({groups[i]["residue"] for i in candidate}) < 2:
+            if len({groups[i]["residue"] for i in candidate}) < cfg["min_distinct_residues"]:
                 continue
             classic = all(groups[i]["classic"] for i in candidate)
             key = (order, classic)
@@ -351,7 +362,7 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
     solver = UnionSolver(xyz, radii)
     heavy_tree = cKDTree(xyz) if len(xyz) else None
     metrics, predictions, site_rows, candidate_rows = [], [], [], []
-    for order in (3, 4):
+    for order in cfg["candidate_orders"]:
         for classic in (False, True):
             if cohort != "zn" and classic:
                 continue
@@ -366,7 +377,7 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
                 row["candidate_seconds"] += elapsed
                 hard = tau > cfg["delta"]
                 ligand_ids = {a for i in candidate for a in groups[i]["atoms"]}
-                clash_pass = not any(a not in ligand_ids for a in heavy_tree.query_ball_point(point, 1.8))
+                clash_pass = not any(a not in ligand_ids for a in heavy_tree.query_ball_point(point, cfg["clash_distance"]))
                 row["hard"] += int(hard)
                 row["clash_pass"] += int(clash_pass)
                 row["hard_clash_pass"] += int(hard and clash_pass)
@@ -384,7 +395,7 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
     for index, site in enumerate(sites):
         ids = site["groups"]
         eta = None
-        if 2 <= len(ids) <= 8 and np.prod([len(groups[i]["atoms"]) for i in ids]) <= 256:
+        if cfg["eta_min_patches"] <= len(ids) <= cfg["eta_max_patches"] and np.prod([len(groups[i]["atoms"]) for i in ids]) <= cfg["eta_max_alternatives"]:
             _, tau = solver.solve([groups[i]["atoms"] for i in ids])
             pw = max(pair_support(groups[a]["atoms"], groups[b]["atoms"], xyz, radii) for a, b in combinations(ids, 2))
             eta = tau - pw
@@ -394,8 +405,8 @@ def compute_structure(identifier, cohort, data, cfg, result, region_radius=0.):
                           "error": best, "error_clash": best_clash})
     result.update(status="complete", metrics=metrics, sites=site_rows, candidates=candidate_rows,
                   candidate_calls=solver.calls, weighted_solves=solver.solves, certificate_failures=solver.failures,
-                  weighted_solver_seconds=solver.seconds, clusters=clustered_count(points),
-                  clusters_clash=clustered_count(unclashed))
+                  weighted_solver_seconds=solver.seconds, clusters=clustered_count(points, cfg),
+                  clusters_clash=clustered_count(unclashed, cfg))
 
 
 def worker(args, cfg):
@@ -443,7 +454,7 @@ def execute(args, cfg):
         command = [sys.executable, str(Path(__file__).resolve()), "--stage", "worker", "--data", str(args.data),
                    "--config", str(args.config), "--pdb-id", pdb, "--cohort", cohort, "--output", str(out)]
         try:
-            completed = subprocess.run(command, capture_output=True, text=True, timeout=cfg["timeout_seconds"] + 30)
+            completed = subprocess.run(command, capture_output=True, text=True, timeout=cfg["timeout_seconds"] + cfg["worker_grace_seconds"])
             if completed.returncode or not out.exists():
                 raise RuntimeError(f"worker exit {completed.returncode}")
             row = json.loads(out.read_text())
@@ -474,12 +485,13 @@ def selected_records(directory, samples):
 
 
 def summarize(args, cfg):
-    dates = annotate_dates(args.data)
+    match_near, match_far = cfg["site_match_distances"]
+    dates = annotate_dates(args.data, cfg)
     samples = current_samples()
     records = selected_records(args.data / "structures", samples)
     for record in records:
         record["initial_release_date"] = dates[record["pdb_id"]]
-        record["time_split_test"] = release_is_test(dates[record["pdb_id"]])
+        record["time_split_test"] = release_is_test(dates[record["pdb_id"]], cfg)
     per_structure = [{k: v for k, v in row.items() if k not in {"metrics", "sites", "candidates", "error"}} for row in records]
     write_csv(ROOT / "results/tables/exp09_metal_site_pilot_per_structure.csv", per_structure)
     site_rows = [{"cohort": r["cohort"], "pdb_id": r["pdb_id"], **site} for r in records for site in r.get("sites", [])]
@@ -488,7 +500,7 @@ def summarize(args, cfg):
     write_csv(ROOT / "results/tables/exp09_metal_site_pilot_candidate_strata.csv", detail)
     summary = []
     for cohort in ("zn", "water", "mg"):
-        for k in (3, 4):
+        for k in cfg["candidate_orders"]:
             for stratum in (["all", "classic"] if cohort == "zn" else ["all"]):
                 for split in (["all", False, True] if cohort != "mg" else ["all"]):
                     complete = [r for r in records if r["cohort"] == cohort and r["status"] == "complete"
@@ -531,14 +543,14 @@ def summarize(args, cfg):
             "candidate_mean_seconds": candidate_seconds / sample_count if sample_count else None,
             "candidate_median_p90_max_seconds": np.quantile(candidate_times, [.5,.9,1.]).tolist() if candidate_times else None,
             "projected_candidate_core_hours_complete_structures": projected / 3600,
-            "true_sites": len(truth), "eta_evaluable": len(eta), "eta_positive_fraction": sum(e > 1e-6 for e in eta) / len(eta) if eta else None,
-            "recall_1A": sum(s["error"] is not None and s["error"] <= 1 for s in truth) / len(truth) if truth else None,
-            "recall_2A": sum(s["error"] is not None and s["error"] <= 2 for s in truth) / len(truth) if truth else None,
-            "recall_clash_1A": sum(s["error_clash"] is not None and s["error_clash"] <= 1 for s in truth) / len(truth) if truth else None,
-            "recall_clash_2A": sum(s["error_clash"] is not None and s["error_clash"] <= 2 for s in truth) / len(truth) if truth else None,
+            "true_sites": len(truth), "eta_evaluable": len(eta), "eta_positive_fraction": sum(e > cfg["eta_positive_tolerance"] for e in eta) / len(eta) if eta else None,
+            "recall_1A": sum(s["error"] is not None and s["error"] <= match_near for s in truth) / len(truth) if truth else None,
+            "recall_2A": sum(s["error"] is not None and s["error"] <= match_far for s in truth) / len(truth) if truth else None,
+            "recall_clash_1A": sum(s["error_clash"] is not None and s["error_clash"] <= match_near for s in truth) / len(truth) if truth else None,
+            "recall_clash_2A": sum(s["error_clash"] is not None and s["error_clash"] <= match_far for s in truth) / len(truth) if truth else None,
             "median_nearest_localization_error_A": float(np.median(errors)) if errors else None,
-            "median_matched_1A_error_A": float(np.median([e for e in errors if e <= 1])) if any(e <= 1 for e in errors) else None,
-            "median_matched_2A_error_A": float(np.median([e for e in errors if e <= 2])) if any(e <= 2 for e in errors) else None,
+            "median_matched_1A_error_A": float(np.median([e for e in errors if e <= match_near])) if any(e <= match_near for e in errors) else None,
+            "median_matched_2A_error_A": float(np.median([e for e in errors if e <= match_far])) if any(e <= match_far for e in errors) else None,
             "clusters_per_true_site": sum(r["clusters"] for r in complete) / len(truth) if truth else None,
             "clusters_clash_per_true_site": sum(r["clusters_clash"] for r in complete) / len(truth) if truth else None,
             "weighted_solves": sum(r["weighted_solves"] for r in complete),
@@ -571,14 +583,14 @@ def main():
     parser.add_argument("--stage", choices=["select", "download", "crosscheck", "run", "summarize", "worker"], required=True)
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--biolip", type=Path)
-    parser.add_argument("--config", type=Path, default=HERE / "config.json")
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--pdb-id")
     parser.add_argument("--cohort", choices=["zn", "water", "mg"])
     parser.add_argument("--output", type=Path)
     parser.add_argument("--region-radius", type=float, default=0., help="separate RNA/Mg regional calibration radius")
     args = parser.parse_args()
-    cfg = json.loads(args.config.read_text())
+    cfg = load_config(args.config)
     if not args.data.is_dir():
         parser.error("--data must be an existing directory outside the repository")
     if ROOT == args.data.resolve() or ROOT in args.data.resolve().parents:
@@ -588,8 +600,8 @@ def main():
     elif args.stage == "download":
         download(args.data, cfg)
     elif args.stage == "crosscheck":
-        result = crosscheck(cfg["seed"], 50)
-        if result["max_abs_delta_tau"] > 1e-5:
+        result = crosscheck(cfg["seed"], cfg["crosscheck_cases"])
+        if result["max_abs_delta_tau"] > cfg["crosscheck_tolerance"]:
             raise RuntimeError(f"crosscheck mismatch: {result}")
         (args.data / "crosscheck.json").write_text(json.dumps(result, indent=2))
         print(json.dumps(result))

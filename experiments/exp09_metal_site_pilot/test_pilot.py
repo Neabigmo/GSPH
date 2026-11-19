@@ -2,6 +2,7 @@ import sys
 import io
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -9,7 +10,44 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from geometry import UnionSolver, cliques, pair_support, weighted_support
 from run import clustered_count, config_hash, crop_region, download, pair_graph, read_structure, release_is_test, reusable_result
-from run import selected_records
+from run import execute, load_config, selected_records
+
+
+def test_run_retries_missing_download_and_result(tmp_path, monkeypatch):
+    cfg = load_config()
+    cfg["workers"] = 1
+    (tmp_path / "selection.json").write_text(json.dumps({"samples": {"zn": ["test"]}}))
+    structures = tmp_path / "structures"
+    structures.mkdir()
+    output = structures / "zn_test.json"
+    output.write_text(json.dumps({"status": "download_missing", "config_hash": config_hash(cfg)}))
+    calls = []
+    def retry(data, config):
+        calls.append("download")
+        (data / "test.cif.gz").touch()
+    def solve(command, **kwargs):
+        calls.append("worker")
+        output.write_text(json.dumps({"status": "complete", "config_hash": config_hash(cfg)}))
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr("run.download", retry)
+    monkeypatch.setattr("run.subprocess.run", solve)
+    args = SimpleNamespace(data=tmp_path, limit=None, config=tmp_path / "config.yaml")
+    execute(args, cfg)
+    assert calls == ["download", "worker"]
+    execute(args, cfg)
+    assert calls == ["download", "worker", "download"]
+
+
+def test_yaml_thresholds_are_effective():
+    cfg = load_config()
+    changed = {**cfg, "clustering_threshold": .1, "time_split_date": "2025-01-01"}
+    points = [[0., 0., 0.], [.5, 0., 0.]]
+    assert clustered_count(points, cfg) == 1
+    assert clustered_count(points, changed) == 2
+    assert release_is_test("2024-05-01", cfg)
+    assert not release_is_test("2024-05-01", changed)
+    for key in ("coordination_radii", "site_match_distances", "sample_per_order_stratum"):
+        assert config_hash(cfg) != config_hash({**cfg, key: None})
 
 
 def test_summary_ignores_historical_results(tmp_path):

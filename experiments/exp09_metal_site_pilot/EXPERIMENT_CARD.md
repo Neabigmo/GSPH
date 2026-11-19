@@ -39,7 +39,11 @@
   An optional separate RNA regional calibration keeps complete patches inside
   a seeded ligand-centered sphere and a six-Angstrom heavy-atom clash shell.
   Its output must not be pooled with whole-structure hard-negative estimates.
-- **Run:** install NumPy, SciPy, gemmi, requests and pytest; use
+- **Configuration:** thresholds, radii, seeds and caps live in
+  `configs/experiments/exp09_metal_site_pilot.yaml`. Results carry a hash of
+  the effective configuration; resume only reuses matching results and retries
+  missing downloads. Summaries include only the current sample ID lists.
+- **Run:** install NumPy, SciPy, gemmi, requests, PyYAML and pytest; use
   `PYTHONPATH=src python experiments/exp09_metal_site_pilot/run.py --help`.
   Supply input/data locations as CLI arguments; data and raw JSON logs stay
   outside the repository. Checked-in outputs contain no machine paths.
