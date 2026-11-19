@@ -108,6 +108,9 @@ The apparent RNA count conflict is explained by the committed
 successful feature rows** survive audit, then **20 native structures excluded**
 leaves **806 scored decoys over 20 targets**. These are recorded pipeline counts,
 not three alternative filesystem counts; audit records need not be unique PDBs.
+The owner reports 20 target directories, 826 PDB files, 20 `.rmsd` files and 20
+`.DI` files on the laptop. The label directories are already staged at
+`$HOME/gsph_paper/data/pm_labels/PM_decoy_set/{RMSD,DI}` on the HPC.
 Read-only laptop counts (including native PDBs) can be obtained with:
 
 ```bash
