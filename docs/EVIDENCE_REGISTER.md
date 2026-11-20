@@ -1,4 +1,4 @@
-# 证据清单（2026-11-20）
+# 证据清单（2026-11-20，RNA 单接触明细已补齐）
 
 本清单列出论文可以引用的每一条证据，每条写明结论、数字、数据范围和对应的结果表。"核对"一栏的含义：
 - **已核对**：本清单中的数字是 2026-11-20 直接从所列结果表重新读出或重新计算的。
@@ -15,7 +15,7 @@
 | 1.3 | 蛋白-DNA：按精确 Å，共同支撑与两两支撑的条形码不同 | 有向图 5/8 个结构至少一阶不同（H1 5/8，H2 3/8）；对称化图 8/8（H1 6/8，H2 8/8）；H0 都相同 | 原审计队列中的 8 个 FTDMP 诱饵（1FOK、1HJC、1K79、1TRO 各 2 个），坐标取自官方 Zenodo 12804208 | `results/tables/union_audit_pd_barcodes.csv`，`results/reports/union_audit_pd.md` | 已核对 |
 | 1.4 | RNA：按精确 Å，共同支撑与两两支撑的条形码不同 | 有向图和对称化图都是 8/8 个结构在 H1、H2 不同，H0 都相同。对称化 H2 多出 48–118 个条形码，有限总持续度多 2.33–5.96 Å | 原审计队列中的 8 个 RNA 诱饵（clash 比 0.6） | `results/tables/union_rna_barcode_summary.csv` | 已核对 |
 | 1.5 | 全队列满足仿射 Jung 界 | 蛋白-DNA 132,138 条路径、RNA 340,874 条路径，违反数都是 0。检验量最大值：蛋白-DNA 1.130，RNA 1.141，都低于 √(3/2)≈1.225 | 原审计的 16 个结构，有向和对称化两种图，阶 0–3 | `results/tables/union_audit_pd_ratio_distribution.csv`，`results/tables/union_rna_ratio_distribution.csv` | 已核对 |
-| 1.6 | 不需要备选 patch，也会出现超出两两支撑的缺口 | 蛋白-DNA 中，只含单接触 patch、δ=0 而 η>0 的路径有 9,616 条，分布在 7/8 个结构中，最大 η 为 0.676 Å | 8 个蛋白-DNA 诱饵 | `results/tables/union_audit_pd_per_structure.csv` | 已核对 |
+| 1.6 | 不需要备选 patch，也会出现超出两两支撑的缺口 | 蛋白-DNA：只含单接触 patch、δ=0 而 η>0 的路径有 9,616 条，分布在 7/8 个结构中，最大 η 为 0.676 Å。RNA：8/8 个结构、有向加对称化共 71,279 条，其中检验量大于 1 的 43,078 条，违反界 0 条，检验量最大 1.141。RNA 的结果表只保留了检验量最高的 10 条路径的 η（其中最大 0.497 Å），全体 71,279 条中的最大 η 不在已入库的表里 | 蛋白-DNA 8 个诱饵；RNA 8 个诱饵 | `results/tables/union_audit_pd_per_structure.csv`，`results/tables/union_rna_single_contact_summary.csv`，`results/tables/union_rna_single_contact_top.csv` | 已核对 |
 | 1.7 | 归档路径数可复现 | 16 个结构在两种图上、各阶的路径数与归档一致 | 原审计的 16 个结构 | `results/tables/path_landscape.parquet` | 已核对（蛋白-DNA 由批处理的队列检查通过；RNA 由超算会话导出） |
 
 ## 2. 与外部打分方法的同池对比
@@ -48,7 +48,6 @@
 | Mg（RNA）位点 | 16/20 个结构完成。56 个位点中 1 Å 召回只有 0.089，2 Å 召回 0.482，误差中位数 2.18 Å，结果很差 | 不进正文；需要时在补充材料中如实报告 |
 | Mg 被截断的 4 个结构 | 4V9P、5FDU、6XQE、9DFD 超过 25 万原子或 5 万 patch 的上限，被截断（`ion_full_per_structure.csv` 中 status=size_censored）。放宽上限的重跑脚本（`scripts/slurm/ion_mg_relaxed.sh`）已写好，但没有结果 | 未完成 |
 | 外部离子位点对比（Metal3D、AllMetal3D） | 超算 CPU 作业脚本和环境已就绪（`experiments/external_metal_site_run/`），还没有运行 | 未完成；没有结果前，正文不写与 Metal3D 的比较 |
-| RNA 单接触明细 | 另有 4 个 RNA 结构的单接触明细（δ=0 而 η>0 的路径列表）还没有从超算取回 | 未完成；第 1.6 条只引用蛋白-DNA |
 | FTDMP unbound | 候选几乎全是错误构象：47 个靶标中只有 8 个有 CAD ≥ 0.3 的候选。本方法 0.192，FTDMP −0.011，VoroMQA −0.032 | 不进正文，放补充材料并说明口径（`results/reports/external_scoring_pd.md`） |
 | lociPARSE | PM 上宏平均 0.596。作者的训练集清单（Zenodo 12669705）返回 403，无法核对是否包含 PM 靶标 | 不进正文，放补充材料 |
 | 1BDT 那 1 个 unbound 候选 | 本方法特征表本来就缺这一条，很可能是当时特征提取失败或被排除 | 同池对比中已排除，用 18,799 对，并作说明 |
