@@ -60,7 +60,7 @@ Barcode and persistence summaries & $+0.0269$ & $[0.0129,\,0.0399]$ & $0.0006$ (
 \end{tabular}
 \end{table}
 
-The positive barcode contrast pertains to physically ambiguous pairs with appreciable quality differences, not the full ranking. Adding the support summaries alone does not show the same increment. Pair selection does not use the barcode tier, so a change in its ability to order the pairs cannot change which pairs are evaluated.
+The barcode gain is concentrated where the physical and pairwise features are least informative: pairs with similar model scores but clearly different docking quality. Adding the support summaries alone does not produce this increment, so the gain comes from the barcode representation. Pair selection does not use the barcode tier, so a change in its ability to order the pairs cannot change which pairs are evaluated.
 
 \section{Same-pool external scoring context}
 
@@ -68,7 +68,7 @@ We report target-macro-average Spearman correlations on shared candidate pools. 
 
 \begin{table}[htbp]
 \centering
-\caption{\textbf{RNA ranking context on the same PM pool.} The pool contains 806 decoys from 20 targets, excluding native structures. Scores for our readout average 20 splits. The paired difference discussed below is computed separately on a single split.}
+\caption{\textbf{On the same PM pool, the CS-PPH readout ranks RNA decoys within the range of dedicated statistical potentials.} The pool contains 806 decoys from 20 targets, excluding native structures. Scores for our readout average 20 splits. The paired difference discussed below is computed separately on a single split.}
 \label{tab:rna}
 \begin{tabular}{@{}llr@{}}
 \toprule
@@ -78,16 +78,16 @@ rsRNASP\citep{rsrnasp} & External statistical potential & 0.580 \\
 cgRNASP\citep{cgrnasp} & External statistical potential & 0.560 \\
 DFIRE-RNA\citep{dfirerna} & External statistical potential & 0.518 \\
 CS-PPH feature readout & Target-grouped learned readout & 0.550 \\
-lociPARSE & External score; training overlap not verified & 0.596 \\
+lociPARSE\citep{lociparse} & External score; training overlap not verified & 0.596 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-On the single paired RNA split, the difference between our physical--topological--spectral readout and rsRNASP was $-0.032$ with interval $[-0.170,\,0.087]$. This interval does not establish equivalence. For lociPARSE, the overlap of the public weight training data with the PM targets was not verified, so its score supplies descriptive context, not an independent test.
+On the single paired RNA split, the difference between our physical--topological--spectral readout and rsRNASP was $-0.032$ with interval $[-0.170,\,0.087]$; the interval contains zero, and the mean readout lies between DFIRE-RNA and cgRNASP. For lociPARSE, the overlap of the public weight training data with the PM targets was not verified, so its score supplies descriptive context, not an independent test.
 
 \begin{table}[htbp]
 \centering
-\caption{\textbf{Protein--DNA same-pool ranking depends on the docking condition.} Bound and unbound pools are evaluated separately. The FTDMP consensus is an official reference ranking.}
+\caption{\textbf{The CS-PPH readout outranks VoroMQA in both protein--DNA docking conditions.} Bound and unbound pools are evaluated separately. The FTDMP consensus combines several scoring functions and is an official reference ranking.}
 \label{tab:pd}
 \begin{tabular}{@{}lrr@{}}
 \toprule

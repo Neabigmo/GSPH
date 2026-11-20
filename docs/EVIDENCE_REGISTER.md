@@ -22,7 +22,7 @@
 
 | # | 结论 | 数字 | 数据范围 | 结果表 | 核对 |
 |---|---|---|---|---|---|
-| 2.1 | RNA 上，本方法与经典统计势持平 | 宏平均 Spearman：rsRNASP 0.580、cgRNASP 0.560、DFIRE-RNA 0.518；本方法最佳臂 0.550（20 次划分的均值）。按单次划分，A7_PTH 与 rsRNASP 的配对差为 −0.032 [−0.170, 0.087] | PM 诱饵集：20 个靶标，806 个 decoy，不含 native | `results/tables/external_scoring_pm_full_per_target.csv`，`external_scoring_pm_bootstrap_single_split.csv` | 已核对 |
+| 2.1 | RNA 上，本方法与经典统计势持平 | 宏平均 Spearman：rsRNASP 0.580、cgRNASP 0.560、DFIRE-RNA 0.518；本方法最佳臂 0.550（20 次划分的均值）。按单次划分，物理–拓扑–谱特征臂与 rsRNASP 的配对差为 −0.032 [−0.170, 0.087] | PM 诱饵集：20 个靶标，806 个 decoy，不含 native | `results/tables/external_scoring_pm_full_per_target.csv`，`external_scoring_pm_bootstrap_single_split.csv` | 已核对 |
 | 2.2 | 蛋白-DNA 上，本方法明显好于 VoroMQA | bound：0.244 对 −0.004，配对差 +0.248 [+0.194, +0.305] | FTDMP bound，47 个靶标，9,400 个候选 | `results/tables/external_scoring_pd_summary.csv`，`external_scoring_pd_bootstrap.csv` | 已核对 |
 | 2.3 | FTDMP 官方共识排序在 bound 上好于本方法（只作参照） | 0.324 对 0.244，配对差 −0.079 [−0.152, −0.005]；Top-1 CAD 0.596 对 0.356 | 同上 | 同上 | 已核对 |
 | 2.4 | VoroMQA 分数可复现 | 用 Voronota v1.29.4816 抽检 21/21 逐位一致 | 18,800 条中随机抽 20 条，另加 1BDT 那 1 条 | `results/tables/pd_voromqa_scores.jsonl`，`results/reports/external_scoring_pd.md` | 生成时核对 |
@@ -31,7 +31,7 @@
 
 | # | 结论 | 数字 | 数据范围 | 结果表 | 核对 |
 |---|---|---|---|---|---|
-| 3.1 | 在 bound 上，加入条形码层后难例对胜率提高；只加支撑差不提高 | T3−T2 +0.0269 [+0.0129, +0.0399]，Holm p=0.0006；T2−T1 +0.0006 [−0.0054, +0.0064]，p=0.84 | FTDMP bound，47 个靶标，种子 0–9 合并 | `results/tables/hardpair_frozen_summary_pooled.csv` | 已核对 |
+| 3.1 | 在 bound 上，加入条形码层后难例对胜率提高；只加支撑差不提高 | 加条形码层相对支撑层 +0.0269 [+0.0129, +0.0399]，Holm p=0.0006；加支撑层相对物理加两两层 +0.0006 [−0.0054, +0.0064]，p=0.84 | FTDMP bound，47 个靶标，种子 0–9 合并 | `results/tables/hardpair_frozen_summary_pooled.csv` | 已核对 |
 
 ## 4. 离子与水位点（共同见证点）
 
