@@ -47,7 +47,7 @@
 |---|---|---|
 | Mg（RNA）位点 | 16/20 个结构完成。56 个位点中 1 Å 召回只有 0.089，2 Å 召回 0.482，误差中位数 2.18 Å，结果很差 | 不进正文；需要时在补充材料中如实报告 |
 | Mg 被截断的 4 个结构 | 4V9P、5FDU、6XQE、9DFD 超过 25 万原子或 5 万 patch 的上限，被截断（`ion_full_per_structure.csv` 中 status=size_censored）。放宽上限的重跑脚本（`scripts/slurm/ion_mg_relaxed.sh`）已写好，但没有结果 | 未完成 |
-| 外部离子位点对比（Metal3D、AllMetal3D） | 超算 CPU 作业脚本和环境已就绪（`experiments/external_metal_site_run/`），还没有运行 | 未完成；没有结果前，正文不写与 Metal3D 的比较 |
+| 外部离子位点对比（Metal3D、AllMetal3D） | 已在同一批 32 个 Zn 时间外测结构上跑完（RTX 4070，64 次运行全部成功）。以自动质控通过的 69 个位点为参考：Metal3D 1 Å / 2 Å 召回 0.957 / 0.986，中位误差 0.225 Å；AllMetal3D 0.855 / 0.870，0.409 Å。Python 用的是 3.12，其余版本和权重都与说明一致（`results/reports/external_metal_gpu_comparison.md`） | 本方法在同一批 32 个结构上的逐位点数字尚未从超算取回；取回之前，正文只能并列报告两者各自的口径，不写胜负 |
 | FTDMP unbound | 候选几乎全是错误构象：47 个靶标中只有 8 个有 CAD ≥ 0.3 的候选。本方法 0.192，FTDMP −0.011，VoroMQA −0.032 | 不进正文，放补充材料并说明口径（`results/reports/external_scoring_pd.md`） |
 | lociPARSE | PM 上宏平均 0.596。作者的训练集清单（Zenodo 12669705）返回 403，无法核对是否包含 PM 靶标 | 不进正文，放补充材料 |
 | 1BDT 那 1 个 unbound 候选 | 本方法特征表本来就缺这一条，很可能是当时特征提取失败或被排除 | 同池对比中已排除，用 18,799 对，并作说明 |
