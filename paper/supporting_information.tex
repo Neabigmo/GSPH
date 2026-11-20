@@ -38,7 +38,28 @@ Example $H_1$ intervals and structure-level counts for the directed graph are sh
 
 The input to the candidate generator is the macromolecular structure with the zinc and water coordinates withheld. A ligand group can offer multiple atoms, each with its own coordination ball. We enumerate pairwise-passing groups of ligands or polar groups, then evaluate the joint support for each candidate. Candidate witnesses are the solutions within the joint coordination tolerance. The independent steric check rejects witness points near nonligand heavy atoms; it does not change the solved witness. A hard negative in the candidate-composition audit is jointly infeasible at the tolerance, regardless of whether its optimal point at a larger scale is sterically admissible. Thus the filtered proportion uses a different denominator.
 
-Nearest-witness coverage at radius $R$ counts each annotated site for which a candidate lies within $R$. One candidate can cover multiple annotations, and extra unmatched candidates do not decrease this coverage. The error summary is the median nearest-witness distance over annotated sites. A separate external zinc comparison uses one-to-one matching on the common quality-controlled structures; the coverage audit does not supply precision or $F_1$ for that comparison.
+Nearest-witness coverage at radius $R$ counts each annotated site for which a candidate lies within $R$. One candidate can cover multiple annotations, and extra unmatched candidates do not decrease this coverage. The error summary is the median nearest-witness distance over annotated sites.
+
+\paragraph{Time-separated zinc reference selection.}
+The structure screen uses X-ray data, resolution and crystallographic free $R$ factor. The automated site screen checks zinc occupancy and displacement relative to surrounding ligands, macromolecular coordination and modeled ligand completeness. It excludes sites with symmetry-copy coordination or a recognized geometry-determining cofactor. These are coordinate-based checks; a release-date split makes no claim about sequence homology to the external models' training data. The external runs used Python 3.12 rather than the 3.10 specified in the run protocol; the pinned model code and released weights were unchanged.
+
+\paragraph{All zinc annotations in the time-separated pool.}
+We also evaluate the same predictions against all 86 zinc annotations from the same 32 structures, including sites that did not pass the automated checks. In this broader set, Metal3D covers a larger share of annotations at both radii; the joint geometry rule still gives the smallest median nearest-position error. These metrics distinguish coverage across all annotations from the proximity of candidate positions. Neither reports one-to-one detection precision or $F_1$.
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Across all zinc annotations, coverage and localization error favor different methods.} The three methods use the same 86 reference sites. Error is the median nearest-prediction distance over the reference set.}
+\label{tab:all-zn}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Method & $1\,\angstrom$ coverage & $2\,\angstrom$ coverage & Median error (\angstrom) \\
+\midrule
+CS-PPH & 0.779 & 0.837 & 0.112 \\
+Metal3D & 0.860 & 0.895 & 0.254 \\
+AllMetal3D & 0.744 & 0.756 & 0.455 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Barcodes add discrimination on frozen hard pairs}
 
@@ -60,7 +81,7 @@ Barcode and persistence summaries & $+0.0269$ & $[0.0129,\,0.0399]$ & $0.0006$ (
 \end{tabular}
 \end{table}
 
-The barcode gain is concentrated where the physical and pairwise features are least informative: pairs with similar model scores but clearly different docking quality. Adding the support summaries alone does not produce this increment, so the gain comes from the barcode representation. Pair selection does not use the barcode tier, so a change in its ability to order the pairs cannot change which pairs are evaluated.
+On these fixed pairs, barcode features improve the ordering beyond what the same ranking setup obtains from support summaries. Pair selection uses the first tier, so gains in the third tier cannot change which pairs are evaluated.
 
 \section{Same-pool external scoring context}
 
