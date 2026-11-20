@@ -113,7 +113,7 @@
 | 持久路径同调（Chowdhury–Mémoli） | 直接用仓库已有的 `edgew` 结果 | 尺度是共价步数，只作参照 | 同上 |
 | 持久路径拉普拉斯 | 不单独计算 | 它的调和部分在同一滤过上就是持久路径同调的 Betti 数，所以和本方法的差别全部来自滤过（出生规则）。这一差别已由 τ 与两两支撑的比较直接给出 | — |
 | rsRNASP / cgRNASP / DFIRE-RNA | 已在 PM 全量上重跑：806 个 decoy，20 个靶标 | 宏平均 Spearman 依次为 0.580 / 0.560 / 0.518；本方法为 0.550，差异不显著 | [external_scoring_inventory.md](../results/reports/external_scoring_inventory.md) |
-| lociPARSE（替代 ARES 作深度学习参照） | 已用官方程序和权重（0.1.1）在同一批 806 个 decoy 上跑完，CPU 共 27 秒 | 宏平均 Spearman 0.596；本方法 A7_PTH 对它的配对差为 −0.049 [−0.155, 0.056]。作者给出的训练集 ID 清单（Zenodo 12669705）返回 403，无法核对是否包含 PM 靶标，只放补充材料 | 同上 |
+| lociPARSE（替代 ARES 作深度学习参照） | 已用官方程序和权重（0.1.1）在同一批 806 个 decoy 上跑完，CPU 共 27 秒 | 宏平均 Spearman 0.596；本方法物理–拓扑–谱特征臂对它的配对差为 −0.049 [−0.155, 0.056]。作者给出的训练集 ID 清单（Zenodo 12669705）返回 403，无法核对是否包含 PM 靶标，只放补充材料 | 同上 |
 | VoroMQA | 用已有逐候选分数，抽检 21/21 复现一致（Voronota v1.29.4816） | 在 bound / unbound 上的宏平均 Spearman 为 −0.004 / −0.032，本方法明显更好 | [external_scoring_pd.md](../results/reports/external_scoring_pd.md) |
 | FTDMP 官方排序 | 已在同一个 18,799 候选池上对齐 | 在 bound 上好于本方法（配对差 −0.079），正文以 bound 为准；在 unbound 上本方法更好（+0.202），但 unbound 候选几乎全是错误构象（47 个靶标中只有 8 个有 CAD ≥ 0.3 的候选），只放补充材料。FTDMP 官方排序是共识排序，只作参照 | 同上 |
 | Metal3D、AllMetal3D | 超算 CPU 作业数组已准备好，等 Robin 通知后再提交；本机推理暂停 | — | [external_metal_site_run](../experiments/external_metal_site_run/README.md) |
