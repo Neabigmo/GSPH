@@ -1,5 +1,7 @@
-reference,method,true_sites,recall_1A,recall_2A,median_nearest_error_A,predicted_sites,pred_per_true_site
-all_ZN_sites,metal3d,86,0.8604651162790697,0.8953488372093024,0.253790503941972,321,3.7325581395348837
-all_ZN_sites,allmetal3d,86,0.7441860465116279,0.7558139534883721,0.45517734303677726,196,2.2790697674418605
-auto_QC_pass,metal3d,69,0.9565217391304348,0.9855072463768116,0.22534640001562042,311,4.507246376811594
-auto_QC_pass,allmetal3d,69,0.855072463768116,0.8695652173913043,0.4088376769574916,187,2.710144927536232
+reference,method,true_sites,recall_1A,recall_2A,median_nearest_error_A
+auto_QC_pass,common_support,69,0.942,0.986,0.084
+auto_QC_pass,metal3d,69,0.957,0.986,0.225
+auto_QC_pass,allmetal3d,69,0.855,0.87,0.409
+all_ZN_sites,common_support,86,0.779,0.837,0.112
+all_ZN_sites,metal3d,86,0.86,0.895,0.254
+all_ZN_sites,allmetal3d,86,0.744,0.756,0.455
