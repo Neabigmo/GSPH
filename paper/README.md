@@ -1,21 +1,11 @@
-# Paper integration notes
+# Common Spatial Witnesses Reveal Higher-Order Geometry in Molecular Path Barcodes
 
-The JCIM manuscript (V0.4, achemso format, 27 pp) is maintained outside
-this repository. This directory tracks only integration metadata:
+- [Manuscript](main.tex) and [Supporting Information](supporting_information.tex)
+- [Main figure](../results/figures/fig_common_support_main.pdf) and [directed-graph companion](../results/figures/fig_common_support_directed.pdf)
+- [Evidence register](../docs/EVIDENCE_REGISTER.md) and [mathematical specification](../docs/MATHEMATICAL_SPEC.md)
 
-- Manuscript package: `GSPH_JCIM_Paper_Package_V0.4` (LaTeX + PDF +
-  figure sources + SI plan + SHA256 manifest).
-- Required numeric corrections after the clash06 audit are frozen in
-  `results/reports/manuscript_v04_corrections.md` — apply before final
-  submission:
-  1. Support totals: PD 12,488 + RNA 59,945 = 72,433 records;
-     H0–H2 intervals 294 + 1,873 = 2,167.
-  2. P0-1 filtration comparison must be reported per task:
-     RNA barcode divergence 14/16 (87.5%), PD 4/16 (25%).
-  3. Certified-valid supports: 72,433/72,433 (100%).
-  4. Methods: intramolecular clash prior `d >= 0.6*(r_a+r_b)`.
-- Figures: `results/figures/` holds the certified common-witness
-  figures (PD 1FOK, RNA SimRNA-3IVN-5, 3dRNA-3IVN-3).
-
-When the manuscript is added, place `main.tex`, `refs.bib`,
-`supporting_information.tex`, and `figures/` here and add `build.sh`.
+Run `sh paper/build.sh` from the repository root with LaTeX, BibTeX and
+latexmk installed. The two PDFs are written to `paper/build/`.
+The time-separated external zinc comparison is reserved for matched results
+from Metal3D and AllMetal3D; the nearest-witness coverage already in the
+manuscript is a separate evaluation.
