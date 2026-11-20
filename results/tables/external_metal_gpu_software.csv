@@ -1,0 +1,15 @@
+item,value
+python,3.12.12
+torch,2.5.1+cu121
+cuda,12.1
+nvidia_driver,572.83
+numpy,1.26.4
+pandas,2.2.3
+scipy,1.12.0
+moleculekit,1.9.4
+allmetal3d,0.7.3
+metal3d_commit,09cbfb3c30e71e4fbea7e535072506c66af97cd9
+sha256:metal_0.5A_v3_d0.2_16Abox.pth,b5a1b0c5ea6c5dcdedfae4e24b8461da107ea78c8b96c7db8f44db532c87246f
+sha256:identity_vacancy_geometry_model_2024-03-01_train_lessclasses_skipconnect_hyperparametertuned_geometry_identity_all_g09_300epoch_p01_epoch300.pth,da49b26e8a4eb918dca3b144961312f66eb3218ee0eae1a0d1548feb12d727cc
+sha256:metal_0.5A_allmetal_one3dchannel_16Abox_filter6_epoch6.pth,38889a0d0f53a0dae8eb8b07268829fe959e346111f9739ad3b3e47194de0aab
+sha256:water_0.5A_allmetal_one3dchannel_epoch9.pth,6b762d94c66fe098a0c63696f5b1c87d955a7465a433628f42896536b9ba1310
