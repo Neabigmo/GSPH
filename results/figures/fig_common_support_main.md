@@ -49,10 +49,13 @@ identical under the two supports, and all 8 differ on the symmetrized graph.
 
 **Evidence register entries.** (a) 1.6; (b) 1.5; (c, d) 1.3 and 1.4.
 
-**Data.** Every number printed on the figure is read from the audited tables
-(`union_rna_ratio_distribution.csv`, `union_audit_pd_ratio_distribution.csv`,
+**Data.** Path totals, the largest ratio, the number of bound violations, the
+"barcodes differ" flags and total finite persistence are read from the audited
+tables (`union_rna_ratio_distribution.csv`, `union_audit_pd_ratio_distribution.csv`,
 `union_rna_barcode_summary.csv`, `union_audit_pd_barcodes.csv`). The histogram
-(`union_ratio_histogram.csv`) and the two drawn barcodes
-(`union_barcode_intervals_examples.json`) and the bar counts above 0.01 Å come from a re-export of the 16
+(`union_ratio_histogram.csv`), the drawn barcodes
+(`union_barcode_intervals_examples.json`) and the bar counts above 0.01 Å
+(`union_barcode_count_by_min_length.csv`) come from a re-export of the 16
 structures from public coordinates; its path counts, ratio quantiles, barcode
-difference flags and total persistence agree with the audited tables. Bars no longer than 1e-6 Å are numerical.
+difference flags and total persistence agree with the audited tables. Bars no
+longer than 1e-6 Å are numerical.
