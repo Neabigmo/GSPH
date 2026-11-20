@@ -44,7 +44,7 @@ Nearest-witness coverage at radius $R$ counts each annotated site for which a ca
 The structure screen uses X-ray data, resolution and crystallographic free $R$ factor. The automated site screen checks zinc occupancy and displacement relative to surrounding ligands, macromolecular coordination and modeled ligand completeness. It excludes sites with symmetry-copy coordination or a recognized geometry-determining cofactor. These are coordinate-based checks; a release-date split makes no claim about sequence homology to the external models' training data. The external runs used Python 3.12 rather than the 3.10 specified in the run protocol; the pinned model code and released weights were unchanged.
 
 \paragraph{All zinc annotations in the time-separated pool.}
-We also evaluate the same predictions against all 86 zinc annotations from the same 32 structures, including sites that did not pass the automated checks. In this broader set, Metal3D covers a larger share of annotations at both radii; the joint geometry rule still gives the smallest median nearest-position error. These metrics distinguish coverage across all annotations from the proximity of candidate positions. Neither reports one-to-one detection precision or $F_1$.
+We also evaluate the same predictions against all 86 zinc annotations from the same 32 structures, including sites that did not pass the automated checks. In this broader set, Metal3D covers a larger share of annotations at both radii; the joint geometry rule still gives the smallest median nearest-position error. These metrics distinguish coverage across all annotations from the proximity of candidate positions.
 
 \begin{table}[htbp]
 \centering
